@@ -15,7 +15,7 @@
             />
         </div>
         <div class="w-full h-auto relative">
-            <p v-if="!isPinValid" class="absolute top-0 text-red-500">{{ LANG.PASSWORD_SAVER.PIN_HELPER[Locale] }}</p>
+            <p v-if="!isPinValid" class=" text-red-500">{{ LANG.PASSWORD_SAVER.PIN_HELPER[Locale] }}</p>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
             </button>
         </div>
         <div class="w-full h-auto relative">
-            <p v-if="!isPasswordValid" class="absolute top-0 text-red-500">{{ LANG.PASSWORD_SAVER.PASS_HELPER[Locale] }}</p>
+            <p v-if="!isPasswordValid" class="text-red-500">{{ LANG.PASSWORD_SAVER.PASS_HELPER[Locale] }}</p>
         </div>
     </div>
 

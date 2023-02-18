@@ -15,7 +15,7 @@
                 />
             </div>
             <div class="w-full h-auto relative">
-                <p v-if="!isPinValid" class="absolute top-0 text-red-500">{{ LANG.PASSWORD_LOADER.PIN_HELPER[Locale] }}</p>
+                <p v-if="!isPinValid" class=" text-red-500">{{ LANG.PASSWORD_LOADER.PIN_HELPER[Locale] }}</p>
             </div>
         </div>
     
