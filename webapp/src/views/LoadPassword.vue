@@ -31,7 +31,7 @@
     </div>
     </template>
     
-    <script lang="ts">
+    <script lang="ts"> 
     import { defineComponent, type PropType } from 'vue';
     import type { Language } from '@/params/language';
     
