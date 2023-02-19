@@ -3,14 +3,18 @@ import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, 
 export type PasswordSaverConfig = {
     id: number;
     salt: Buffer;
+    saltBitsLength: number;
     pass: Buffer;
+    passBitsLength: number;
 };
 
 export function PasswordSaverConfigToCell(config: PasswordSaverConfig): Cell {
     return beginCell()
-        .storeUint(config.id, 32)
-        .storeBuffer(config.salt, 32)
-        .storeBuffer(config.pass, 32)
+        .storeUint( config.id, 32 )
+        .storeUint( config.saltBitsLength, 8 )
+        .storeUint( config.passBitsLength, 8 )
+        .storeBuffer( config.salt, config.saltBitsLength )
+        .storeBuffer( config.pass, config.passBitsLength )
         .endCell();
 }
 
@@ -44,7 +48,9 @@ export class PasswordSaver implements Contract {
         via: Sender,
         opts: {
             salt: Buffer;
+            saltBitsLength: number;
             pass: Buffer;
+            passBitsLength: number;
             value: bigint;
         }
     ) {
@@ -52,10 +58,11 @@ export class PasswordSaver implements Contract {
             value: opts.value,
             sendMode: SendMode.PAY_GAS_SEPARATLY,
             body: beginCell()
-                .storeUint(Opcodes.increase, 32)
-                //.storeUint(opts.queryID ?? 0, 64)
-                .storeBuffer(opts.salt, 32)
-                .storeBuffer(opts.pass, 32)
+                .storeUint( Opcodes.increase, 32 )
+                .storeUint( opts.saltBitsLength, 8 )
+                .storeUint( opts.passBitsLength, 8 )
+                .storeBuffer( opts.salt, opts.saltBitsLength )
+                .storeBuffer( opts.pass, opts.passBitsLength )
                 .endCell(),
         });
     }

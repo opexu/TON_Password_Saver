@@ -14,12 +14,19 @@ describe('PasswordSaver', () => {
     it('should deploy', async () => {
         const blockchain = await Blockchain.create();
 
+        const salt = Buffer.from('Hello');
+        const saltBitsLength = salt.byteLength;
+        const pass = Buffer.from('Pass');
+        const passBitsLength = pass.byteLength;
+
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
                 {
                     id: 0,
-                    salt: Buffer.alloc(32).fill('Hello'),
-                    pass: Buffer.alloc(32).fill('Pass'),
+                    salt: salt,
+                    saltBitsLength: saltBitsLength,
+                    pass: pass,
+                    passBitsLength: passBitsLength
                 },
                 code
             )
@@ -39,15 +46,19 @@ describe('PasswordSaver', () => {
     it('should change salt', async () => {
         const blockchain = await Blockchain.create();
 
-        const startSalt = "Hello";
-        const startPass = "Pass";
+        const startSalt = Buffer.from('Hello');
+        const startSaltBitsLength = startSalt.byteLength;
+        const startPass = Buffer.from('Pass');
+        const startPassBitsLength = startPass.byteLength;
 
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
                 {
                     id: 0,
-                    salt: Buffer.alloc(32).fill( startSalt ),
-                    pass: Buffer.alloc(32).fill( startPass ),
+                    salt: startSalt,
+                    saltBitsLength: startSaltBitsLength,
+                    pass: startPass,
+                    passBitsLength: startPassBitsLength
                 },
                 code
             )
@@ -66,18 +77,21 @@ describe('PasswordSaver', () => {
         const increaser = await blockchain.treasury('salter');
 
         const getBuffer = await passwordSaver.getSalt();
-        const getBufferString = getBuffer.toString();
-        console.log('Данные после деплоя:', getBufferString);
+        console.log('Данные после деплоя:', getBuffer);
 
 
         /////////////////////////////////////
 
-        const newSalt = "Pizda";
-        const newPass = "Nahuy";
+        const newSalt = Buffer.from('pizda');
+        const newSaltBitsLength = newSalt.byteLength;
+        const newPass = Buffer.from('nahuy');
+        const newPassBitsLength = newPass.byteLength;
 
         const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
-            salt: Buffer.alloc(32).fill( newSalt ),
-            pass: Buffer.alloc(32).fill( newPass ),
+            salt: newSalt,
+            saltBitsLength: newSaltBitsLength,
+            pass: newPass,
+            passBitsLength: newPassBitsLength,
             value: toNano('0.05'),
         });
 
@@ -87,11 +101,9 @@ describe('PasswordSaver', () => {
             success: true,
         });
 
-        const getNewBuffer = await passwordSaver.getSalt();
-        const getNewBufferString = getNewBuffer.toString();
+        const getNewSalt = await passwordSaver.getSalt();
+        console.log('Данные после изменения:', getNewSalt);
 
-        console.log('Данные после изменения:', getNewBufferString);
-
-        expect(newPass).toBe(getNewBufferString);
+        expect(newSalt).toBe(getNewSalt);
     });
 });
