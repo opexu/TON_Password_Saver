@@ -16,8 +16,10 @@ describe('PasswordSaver', () => {
 
         const salt = Buffer.from('Hello');
         const saltBitsLength = salt.byteLength;
+        console.log('deploy saltBitsLength: ', saltBitsLength);
         const pass = Buffer.from('Pass');
         const passBitsLength = pass.byteLength;
+        console.log('deploy passBitsLength: ', passBitsLength);
 
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
@@ -48,8 +50,10 @@ describe('PasswordSaver', () => {
 
         const startSalt = Buffer.from('Hello');
         const startSaltBitsLength = startSalt.byteLength;
+        console.log('salt startSaltBitsLength: ', startSaltBitsLength)
         const startPass = Buffer.from('Pass');
         const startPassBitsLength = startPass.byteLength;
+        console.log('salt startPassBitsLength: ', startPassBitsLength)
 
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
@@ -84,8 +88,10 @@ describe('PasswordSaver', () => {
 
         const newSalt = Buffer.from('pizda');
         const newSaltBitsLength = newSalt.byteLength;
+        console.log('change newSaltBitsLength: ', newSaltBitsLength)
         const newPass = Buffer.from('nahuy');
         const newPassBitsLength = newPass.byteLength;
+        console.log('change newPassBitsLength: ', newPassBitsLength)
 
         const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
             salt: newSalt,

@@ -11,10 +11,10 @@ export type PasswordSaverConfig = {
 export function PasswordSaverConfigToCell(config: PasswordSaverConfig): Cell {
     return beginCell()
         .storeUint( config.id, 32 )
-        .storeUint( config.saltBitsLength, 8 )
-        .storeUint( config.passBitsLength, 8 )
-        .storeBuffer( config.salt, config.saltBitsLength )
-        .storeBuffer( config.pass, config.passBitsLength )
+        .storeUint( config.saltBitsLength * 8, 8 )
+        .storeUint( config.passBitsLength * 8, 8 )
+        .storeBuffer( config.salt )
+        .storeBuffer( config.pass )
         .endCell();
 }
 
@@ -59,10 +59,10 @@ export class PasswordSaver implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATLY,
             body: beginCell()
                 .storeUint( Opcodes.increase, 32 )
-                .storeUint( opts.saltBitsLength, 8 )
-                .storeUint( opts.passBitsLength, 8 )
-                .storeBuffer( opts.salt, opts.saltBitsLength )
-                .storeBuffer( opts.pass, opts.passBitsLength )
+                .storeUint( opts.saltBitsLength * 8, 8 )
+                .storeUint( opts.passBitsLength * 8, 8 )
+                .storeBuffer( opts.salt )
+                .storeBuffer( opts.pass )
                 .endCell(),
         });
     }
