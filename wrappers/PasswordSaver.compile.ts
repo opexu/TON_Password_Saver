@@ -1,5 +1,5 @@
 import { CompilerConfig } from '@ton-community/blueprint';
 
 export const compile: CompilerConfig = {
-    targets: ['contracts\temp.fc'],
+    targets: ['contracts/Password_Saver.fc'],
 };

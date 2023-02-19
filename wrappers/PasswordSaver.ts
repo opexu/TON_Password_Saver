@@ -1,29 +1,34 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
 
-export type TempConfig = {
+export type PasswordSaverConfig = {
     id: number;
-    counter: number;
+    salt: Buffer;
+    pass: Buffer;
 };
 
-export function tempConfigToCell(config: TempConfig): Cell {
-    return beginCell().storeUint(config.id, 32).storeUint(config.counter, 32).endCell();
+export function PasswordSaverConfigToCell(config: PasswordSaverConfig): Cell {
+    return beginCell()
+        .storeUint(config.id, 32)
+        .storeBuffer(config.salt, 32)
+        .storeBuffer(config.pass, 32)
+        .endCell();
 }
 
 export const Opcodes = {
     increase: 0x7e8764ef,
 };
 
-export class Temp implements Contract {
+export class PasswordSaver implements Contract {
     constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
 
     static createFromAddress(address: Address) {
-        return new Temp(address);
+        return new PasswordSaver(address);
     }
 
-    static createFromConfig(config: TempConfig, code: Cell, workchain = 0) {
-        const data = tempConfigToCell(config);
+    static createFromConfig(config: PasswordSaverConfig, code: Cell, workchain = 0) {
+        const data = PasswordSaverConfigToCell(config);
         const init = { code, data };
-        return new Temp(contractAddress(workchain, init), init);
+        return new PasswordSaver(contractAddress(workchain, init), init);
     }
 
     async sendDeploy(provider: ContractProvider, via: Sender, value: bigint) {
@@ -34,13 +39,13 @@ export class Temp implements Contract {
         });
     }
 
-    async sendIncrease(
+    async sendSalt(
         provider: ContractProvider,
         via: Sender,
         opts: {
-            increaseBy: number;
+            salt: Buffer;
+            pass: Buffer;
             value: bigint;
-            queryID?: number;
         }
     ) {
         await provider.internal(via, {
@@ -48,14 +53,15 @@ export class Temp implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATLY,
             body: beginCell()
                 .storeUint(Opcodes.increase, 32)
-                .storeUint(opts.queryID ?? 0, 64)
-                .storeUint(opts.increaseBy, 32)
+                //.storeUint(opts.queryID ?? 0, 64)
+                .storeBuffer(opts.salt, 32)
+                .storeBuffer(opts.pass, 32)
                 .endCell(),
         });
     }
 
-    async getCounter(provider: ContractProvider) {
-        const result = await provider.get('get_counter', []);
+    async getSalt(provider: ContractProvider) {
+        const result = await provider.get('get_salt', []);
         return result.stack.readNumber();
     }
 
