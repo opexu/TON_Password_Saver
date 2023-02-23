@@ -66,9 +66,9 @@ export class WalletConnection implements IConnection {
             this._deepLink = universalLink;
             console.log('universal link', universalLink );
 
-            setTimeout(()=>{
-                this.onStatusChange( null );
-            }, 2000)
+            // setTimeout(()=>{
+            //     this.onStatusChange( null );
+            // }, 2000)
         }
         else{
             console.warn('no available wallets');
