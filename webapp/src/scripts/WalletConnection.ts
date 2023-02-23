@@ -1,13 +1,11 @@
 import TonConnect, { type WalletInfo } from '@tonconnect/sdk';
-import manifest from '@/tonconnect-manifest.json';
 
 export class WalletConnection {
     
     private _connector: TonConnect;
-    private _manifest = manifest;
-    
+
     constructor(){
-        this._connector = new TonConnect();
+        this._connector = new TonConnect({ manifestUrl: 'https://github.com/opexu/TON_Password_Saver/blob/main/webapp/src/tonconnect-manifest.json'});
     }
 
     async getWallets(): Promise<WalletInfo[]> {
