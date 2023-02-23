@@ -1,4 +1,4 @@
-import TonConnect, { type Wallet, type WalletInfo } from '@tonconnect/sdk';
+import TonConnect, { type Wallet, type WalletInfo, type WalletInfoRemote } from '@tonconnect/sdk';
 import { isWalletInfoInjected, type WalletInfoInjected } from '@tonconnect/sdk';
 
 export enum ConnectionStatus {
@@ -28,6 +28,7 @@ export class WalletConnection implements IConnection {
 
     private _onStatusChange( wallet: Wallet | null ){
         console.log('status change', wallet);
+
     }
 
     public async initConnection(){
@@ -35,16 +36,27 @@ export class WalletConnection implements IConnection {
         this._status = ConnectionStatus.WAIT;
 
         const walletsArr = await this._connector.getWallets();
+        console.log('walletsArr',walletsArr)
         
-        const embeddedWallet = walletsArr.find(
-            ( wallet ) => isWalletInfoInjected( wallet ) && wallet.embedded
-        ) as WalletInfoInjected;
+        const embeddedWallet = walletsArr.find( wallet => {
+            isWalletInfoInjected( wallet ) && wallet.embedded
+        }) as WalletInfoInjected;
         
-        if (embeddedWallet) {
+        const bridgeWallet = walletsArr.find( wallet => {
+            return wallet.name === "Tonkeeper";
+        }) as WalletInfoRemote;
+
+        if ( embeddedWallet ) {
             this._connector.connect({ jsBridgeKey: embeddedWallet.jsBridgeKey });
-            this._status = ConnectionStatus.ENABLE;
-        }else{
-            //this._status = ConnectionStatus.DISABLE;
+        }
+        else if( bridgeWallet ){
+            this._connector.connect({
+                universalLink: bridgeWallet.universalLink,
+                bridgeUrl: bridgeWallet.bridgeUrl,
+            })
+        }
+        else{
+            console.warn('no available wallets');
         }
     }
 }
