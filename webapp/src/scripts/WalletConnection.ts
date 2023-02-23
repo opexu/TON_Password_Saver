@@ -28,7 +28,7 @@ export class WalletConnection implements IConnection {
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
-        this._connector.onStatusChange( this.onStatusChange.bind( this ) );
+        this._connector.onStatusChange( this.onStatusChange );
         // this._connector.onStatusChange( ( wallet: Wallet | null ) => {
         //     console.log('status change', wallet);
         //     this.status = ConnectionStatus.ENABLE;
