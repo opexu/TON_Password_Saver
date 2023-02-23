@@ -15,6 +15,12 @@
     @click="disconnectWallet"
     >{{ LANG.WALLET.DISCONNECT_BTN_LABEL[Locale] }}</button>
 
+    <form>
+        <button type="submit" class="w-full h-fit p-4 border rounded-md"
+        v-if="getDeepLink() !== ''"
+        :formaction="calcDeepLink"
+        >Перейти по ссылке</button>
+    </form>
 </div>
 </template>
 
@@ -42,8 +48,15 @@ data: () => {
     }
 },
 methods:{
-    ...mapState( useTONStore, ['getStatus'] ),
+    ...mapState( useTONStore, ['getStatus', 'getDeepLink'] ),
     ...mapActions( useTONStore, ['connectWallet', 'disconnectWallet']),
+},
+computed:{
+    calcDeepLink(){
+        const deepLink = this.getDeepLink();
+        return deepLink;
+        //return `location.href='${deepLink}'`
+    }
 }
 })
 </script>

@@ -31,6 +31,9 @@ const useTONStore = defineStore('TONStore', {
         },
         getStatus( state ){
             return state.connection.status;
+        },
+        getDeepLink( state ){
+            return state.connection.deepLink;
         }
     }
 })
