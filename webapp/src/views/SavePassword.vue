@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full p-4 flex flex-col">
+<div class="w-full h-full flex flex-col">
 <form autocomplete="off" enctype="multipart/form-data" method="post" class="space-y-8">
     
     <!-- ПИН -->

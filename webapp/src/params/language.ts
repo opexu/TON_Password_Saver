@@ -8,6 +8,19 @@ interface Language {
 
 const LANG: Language = {
     
+    WALLET: {
+        
+        CONNECT_BTN_LABEL: {
+            "ru-RU": "Подключить кошелек TonKeeper",
+            "en-EN": "Connect TonKeeper Wallet",
+        },
+
+        DISCONNECT_BTN_LABEL: {
+            "ru-RU": "Отключить кошелек TonKeeper",
+            "en-EN": "Disconnect TonKeeper Wallet",
+        }
+    },
+
     MAIN: {
 
         GET_BTN_LABEL: {

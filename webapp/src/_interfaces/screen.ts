@@ -1,5 +1,5 @@
 enum SCREEN {
-    MAIN, LOAD, SAVE
+    MAIN, LOAD, SAVE, WALLET
 }
 
 export {
