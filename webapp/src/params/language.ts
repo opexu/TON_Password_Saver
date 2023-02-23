@@ -15,6 +15,11 @@ const LANG: Language = {
             "en-EN": "Connect TonKeeper Wallet",
         },
 
+        WAIT_BTN_LABEL: {
+            "ru-RU": "Ожидаем подключения...",
+            "en-EN": "Wait connection...",
+        },
+
         DISCONNECT_BTN_LABEL: {
             "ru-RU": "Отключить кошелек TonKeeper",
             "en-EN": "Disconnect TonKeeper Wallet",

@@ -2,14 +2,16 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { SCREEN } from '@/_interfaces/screen';
 
-import { WalletConnection } from '@/scripts/WalletConnection';
+import { ConnectionStatus, WalletConnection } from '@/scripts/WalletConnection';
 
 const useTONStore = defineStore('TONStore', {
     state: () => {
+        
+        const _connection = new WalletConnection();
+
         return {
-            connection: new WalletConnection(),
+            connection: _connection,
             screenState: SCREEN.WALLET,
-            isWalletConnected: false,
         }
     },
     actions: {
@@ -17,22 +19,18 @@ const useTONStore = defineStore('TONStore', {
             this.screenState = screenState;
         },
         async connectWallet(){
-            const walletStatus = true;
-            const wallets = await this.connection.getWallets();
-            console.log('wallets', wallets);
-            this.isWalletConnected = walletStatus;
+            this.connection.initConnection();
         },
         async disconnectWallet(){
             const walletStatus = false;
-            this.isWalletConnected = walletStatus;
-        }
+        },
     },
     getters: {
         getScreen( state ){
             return state.screenState;
         },
-        getWalletStatus( state ){
-            return state.isWalletConnected;
+        getStatus( state ){
+            return state.connection.status;
         }
     }
 })
