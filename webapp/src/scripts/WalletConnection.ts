@@ -28,7 +28,7 @@ export class WalletConnection implements IConnection {
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         this._connector.onStatusChange( this._onStatusChange.bind( this ) );
 
-        this._connector.restoreConnection();
+        //this._connector.restoreConnection();
     }
     get debug(){ return this._debug; }
     get deepLink(){ return this._deepLink; }
