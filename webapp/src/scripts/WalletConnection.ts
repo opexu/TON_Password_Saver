@@ -43,6 +43,7 @@ export class WalletConnection implements IConnection {
         // console.log('status change', wallet);
         setTimeout(()=>{
             console.log('status change', wallet);
+            console.log('this', this);
             this._status = ConnectionStatus.ENABLE;
         },2000)
     }
