@@ -8,10 +8,10 @@ export enum ConnectionStatus {
 }
 
 interface IConnection {
-    debug: string;
     status: ConnectionStatus;
     deepLink: string;
     initConnection(): void;
+    disconnect(): void;
 }
 
 export class WalletConnection implements IConnection {
@@ -19,10 +19,8 @@ export class WalletConnection implements IConnection {
     private _connector: TonConnect;
     private _status: ConnectionStatus;
     private _deepLink: string;
-    private _debug: string;
 
     constructor(){
-        this._debug = "";
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
@@ -30,14 +28,12 @@ export class WalletConnection implements IConnection {
 
         //this._connector.restoreConnection();
     }
-    get debug(){ return this._debug; }
     get deepLink(){ return this._deepLink; }
     get status(){ return this._status; }
     set status( status: ConnectionStatus ){ this._status = status }
 
     private _onStatusChange( wallet: Wallet | null ){
         console.log('status change', wallet);
-        this._debug = JSON.stringify(wallet);
     }
 
     public async initConnection(){
@@ -69,5 +65,10 @@ export class WalletConnection implements IConnection {
         else{
             console.warn('no available wallets');
         }
+    }
+
+    public async disconnect() {
+        this._status = ConnectionStatus.WAIT;
+        this._connector.disconnect();
     }
 }

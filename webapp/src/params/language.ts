@@ -23,7 +23,13 @@ const LANG: Language = {
         DISCONNECT_BTN_LABEL: {
             "ru-RU": "Отключить кошелек TonKeeper",
             "en-EN": "Disconnect TonKeeper Wallet",
-        }
+        },
+
+        LINK_TO_WALLET: {
+            "ru-RU": "Перейти в кошелёк",
+            "en-EN": "Go to Wallet App",
+        },
+
     },
 
     MAIN: {
