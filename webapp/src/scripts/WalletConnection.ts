@@ -1,5 +1,6 @@
 import TonConnect, { type Wallet, type WalletInfo, type WalletInfoRemote } from '@tonconnect/sdk';
 import { isWalletInfoInjected, type WalletInfoInjected } from '@tonconnect/sdk';
+// import { Event, EventEmitter, type IEventEmitter } from './EventEmitter';
 
 export enum ConnectionStatus {
     DISABLE,
@@ -8,6 +9,7 @@ export enum ConnectionStatus {
 }
 
 interface IConnection {
+    // eventEmitter: IEventEmitter;
     status: ConnectionStatus;
     deepLink: string;
     initConnection(): void;
@@ -16,19 +18,19 @@ interface IConnection {
 
 export class WalletConnection implements IConnection {
     
-    private _connector: TonConnect;
+    private readonly _connector: TonConnect;
     private _status: ConnectionStatus;
     private _deepLink: string;
 
     constructor(){
         console.log("Start");
+
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         this._connector.onStatusChange( this.onStatusChange.bind( this ) );
-
-        //this._connector.restoreConnection();
     }
+
     get deepLink(){ return this._deepLink; }
     get status(){ return this._status; }
     set status( status: ConnectionStatus ){ this._status = status }
@@ -64,9 +66,9 @@ export class WalletConnection implements IConnection {
             this._deepLink = universalLink;
             console.log('universal link', universalLink );
 
-            // setTimeout(()=>{
-            //     this.onStatusChange( null );
-            // }, 2000)
+            setTimeout(()=>{
+                this.onStatusChange( null );
+            }, 2000)
         }
         else{
             console.warn('no available wallets');

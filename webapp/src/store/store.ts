@@ -1,14 +1,13 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { SCREEN } from '@/_interfaces/screen';
 
-import { ConnectionStatus, WalletConnection } from '@/scripts/WalletConnection';
+import { WalletConnection } from '@/scripts/WalletConnection';
 
 const useTONStore = defineStore('TONStore', {
-    state: () => {
+    state: function(){
         
         const _connection = new WalletConnection();
-
+        
         return {
             connection: _connection,
             screenState: SCREEN.WALLET,
@@ -24,12 +23,16 @@ const useTONStore = defineStore('TONStore', {
         async disconnectWallet(){
             this.connection.disconnect();
         },
+        updateStatus(){
+            console.log('update status');
+        }
     },
     getters: {
         getScreen( state ){
             return state.screenState;
         },
         getStatus( state ){
+            console.log('get status', state.connection.status)
             return state.connection.status;
         },
         getDeepLink( state ){
