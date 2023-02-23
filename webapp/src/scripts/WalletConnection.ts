@@ -4,6 +4,7 @@ import manifest from '@/tonconnect-manifest.json';
 export class WalletConnection {
     
     private _connector: TonConnect;
+    private _manifest = manifest;
     
     constructor(){
         this._connector = new TonConnect();
