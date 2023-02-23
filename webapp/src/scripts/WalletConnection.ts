@@ -21,10 +21,11 @@ export class WalletConnection implements IConnection {
     private _deepLink: string;
 
     constructor(){
+        console.log("Start");
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
-        this._connector.onStatusChange( this._onStatusChange.bind( this ) );
+        this._connector.onStatusChange( this.onStatusChange.bind( this ) );
 
         //this._connector.restoreConnection();
     }
@@ -32,13 +33,13 @@ export class WalletConnection implements IConnection {
     get status(){ return this._status; }
     set status( status: ConnectionStatus ){ this._status = status }
 
-    private _onStatusChange( wallet: Wallet | null ){
+    public onStatusChange( wallet: Wallet | null ){
         console.log('status change', wallet);
         this.status = ConnectionStatus.ENABLE;
     }
 
     public async initConnection(){
-        console.log('initCOnnection');
+        console.log('initConnection');
         this._status = ConnectionStatus.WAIT;
 
         const walletsArr = await this._connector.getWallets();
@@ -62,6 +63,10 @@ export class WalletConnection implements IConnection {
             })
             this._deepLink = universalLink;
             console.log('universal link', universalLink );
+
+            // setTimeout(()=>{
+            //     this.onStatusChange( null );
+            // }, 2000)
         }
         else{
             console.warn('no available wallets');
