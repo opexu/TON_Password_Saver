@@ -34,6 +34,7 @@ export class WalletConnection implements IConnection {
 
     private _onStatusChange( wallet: Wallet | null ){
         console.log('status change', wallet);
+        this._status = ConnectionStatus.ENABLE;
     }
 
     public async initConnection(){
