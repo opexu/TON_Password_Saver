@@ -22,7 +22,7 @@ const useTONStore = defineStore('TONStore', {
             this.connection.initConnection();
         },
         async disconnectWallet(){
-            const walletStatus = false;
+            this.connection.disconnect();
         },
     },
     getters: {
