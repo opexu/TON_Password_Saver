@@ -8,9 +8,6 @@ import './main.css';
 const app = createApp( App );
 
 const pinia = createPinia();
-// pinia.use(({ store })=>{
-//     store.connection = new WalletConnection();
-// });
 app.use( pinia );
 
 app.mount( '#app' );

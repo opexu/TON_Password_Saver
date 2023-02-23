@@ -11,12 +11,6 @@
             : LANG.WALLET.WAIT_BTN_LABEL[Locale] 
     }}</button>
 
-    <!-- КНОПКА ОТКЛЮЧЕНИЯ КОШЕЛЬКА -->
-    <button type="button" class="w-full h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
-    v-else-if="getStatus() === ConnectionStatus.ENABLE"
-    @click="disconnectWallet"
-    >{{ LANG.WALLET.DISCONNECT_BTN_LABEL[Locale] }}</button>
-
     <!-- DEEP LINK -->
     <a class="w-full h-fit p-4 border rounded-md text-center active:bg-blue-800"
     v-if="getDeepLink() !== '' && getStatus() === ConnectionStatus.WAIT"

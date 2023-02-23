@@ -11,6 +11,11 @@
         :class="[ getScreen() === SCREEN.SAVE ? 'bg-blue-800' : '' ]"
         @click="savePasswordClick"
         >+</button>
+
+        <!-- КНОПКА ОТКЛЮЧЕНИЯ КОШЕЛЬКА -->
+        <button type="button" class="w-16 min-w-fit h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
+        @click="disconnectWallet"
+        >x</button>
     </div>
 
     <div class="w-full h-full flex flex-row">
@@ -57,6 +62,7 @@ data: () => {
 },
 methods: {
     ...mapState( useTONStore, ['getScreen'] ),
+    ...mapActions( useTONStore, ['disconnectWallet']),
     loadPasswordClick(){
         this.$emit('load-pass', SCREEN.LOAD);
     },

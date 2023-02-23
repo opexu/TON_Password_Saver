@@ -4,10 +4,10 @@ import { SCREEN } from '@/_interfaces/screen';
 import { WalletConnection } from '@/scripts/WalletConnection';
 
 const useTONStore = defineStore('TONStore', {
-    state: function(){
+    state: () => {
         
         const _connection = new WalletConnection();
-        
+
         return {
             connection: _connection,
             screenState: SCREEN.WALLET,
@@ -23,9 +23,6 @@ const useTONStore = defineStore('TONStore', {
         async disconnectWallet(){
             this.connection.disconnect();
         },
-        updateStatus(){
-            console.log('update status');
-        }
     },
     getters: {
         getScreen( state ){
