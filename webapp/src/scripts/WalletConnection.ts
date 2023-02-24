@@ -20,7 +20,7 @@ export class WalletConnection implements IConnection {
     
     private readonly _connector: TonConnect;
     private _status: ConnectionStatus;
-    private _deepLink: string;
+    private _deepLink: string; 
 
     constructor(){
         console.log("Start");
@@ -29,7 +29,7 @@ export class WalletConnection implements IConnection {
         this._status = ConnectionStatus.DISABLE;
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         
-        this._connector.onStatusChange( this.onStatusChange.bind(this) );
+        //this._connector.onStatusChange( this.onStatusChange.bind(this) );
 
         // this._connector.onStatusChange( ( wallet: Wallet | null ) => {
         //     console.log('status change', wallet);
@@ -41,6 +41,9 @@ export class WalletConnection implements IConnection {
     get deepLink(){ return this._deepLink; }
     get status(){ return this._status; }
     set status( status: ConnectionStatus ){ this._status = status }
+    get statusChange(){
+        return this.connector.onStatusChange;
+    }
 
     public onStatusChange( wallet: Wallet | null ){
         // console.log('status change', wallet);

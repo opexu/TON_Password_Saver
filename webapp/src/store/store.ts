@@ -11,7 +11,7 @@ const useTONStore = defineStore('TONStore', {
         const _connection = new WalletConnection();
         
         return {
-            connection: reactive(_connection),
+            connection: _connection,
             screenState: SCREEN.WALLET,
         }
     },
@@ -21,10 +21,14 @@ const useTONStore = defineStore('TONStore', {
         },
         async connectWallet(){
             this.connection.initConnection();
+            this.connection.statusChange( this.connection.onStatusChange );
         },
         async disconnectWallet(){
             this.connection.disconnect();
         },
+        async onStatusChange(){
+
+        }
     },
     getters: {
         getScreen( state ){
