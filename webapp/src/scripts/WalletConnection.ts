@@ -9,15 +9,17 @@ export enum ConnectionStatus {
 }
 
 interface IConnection {
-    connector: TonConnect;
-    status: ConnectionStatus;
-    deepLink: string;
+    statusChanged?: ( status: ConnectionStatus ) => void;
+    deepLinkChanged?: ( deepLink: string ) => void;
     initConnection(): void;
     disconnect(): void;
 }
 
 export class WalletConnection implements IConnection {
     
+    public statusChanged?: ( status: ConnectionStatus ) => void
+    public deepLinkChanged?: ( deepLink: string ) => void
+
     private readonly _connector: TonConnect;
     private _status: ConnectionStatus;
     private _deepLink: string; 
@@ -27,36 +29,37 @@ export class WalletConnection implements IConnection {
 
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
+
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         
-        //this._connector.onStatusChange( this.onStatusChange.bind(this) );
+        this._connector.onStatusChange( this._onStatusChange.bind(this) );
+    }
 
-        // this._connector.onStatusChange( ( wallet: Wallet | null ) => {
+    set status( status: ConnectionStatus ){
+        this._status = status;
+        if( this.statusChanged ) this.statusChanged( this._status );
+    }
+
+    set deepLink( deepLink: string ){
+        this._deepLink = deepLink;
+        if( this.deepLinkChanged ) this.deepLinkChanged( this._deepLink );
+    }
+
+    private _onStatusChange( wallet: Wallet | null ){
+        // setTimeout(()=>{
         //     console.log('status change', wallet);
-        //     this.status = ConnectionStatus.ENABLE;
-        // });
-    }
-
-    get connector(){ return this._connector; }
-    get deepLink(){ return this._deepLink; }
-    get status(){ return this._status; }
-    set status( status: ConnectionStatus ){ this._status = status }
-    get statusChange(){
-        return this.connector.onStatusChange;
-    }
-
-    public onStatusChange( wallet: Wallet | null ){
-        // console.log('status change', wallet);
-        setTimeout(()=>{
-            console.log('status change', wallet);
-            console.log('this', this);
-            this._status = ConnectionStatus.ENABLE;
-        },2000)
+        //     console.log('this', this);
+        //     this._status = ConnectionStatus.ENABLE;
+        //     if( this.statusChanged ) this.statusChanged( this._status );
+        // },2000)
+        console.log('status change', wallet);
+        console.log('this', this);
+        this.status = ConnectionStatus.ENABLE;
     }
 
     public async initConnection(){
         console.log('initConnection');
-        this._status = ConnectionStatus.WAIT;
+        this.status = ConnectionStatus.WAIT;
 
         const walletsArr = await this._connector.getWallets();
         console.log('walletsArr',walletsArr)
@@ -77,12 +80,8 @@ export class WalletConnection implements IConnection {
                 universalLink: bridgeWallet.universalLink,
                 bridgeUrl: bridgeWallet.bridgeUrl,
             })
-            this._deepLink = universalLink;
+            this.deepLink = universalLink;
             console.log('universal link', universalLink );
-
-            // setTimeout(()=>{
-            //     this.onStatusChange( null );
-            // }, 2000)
         }
         else{
             console.warn('no available wallets');
@@ -90,7 +89,7 @@ export class WalletConnection implements IConnection {
     }
 
     public async disconnect() {
-        this._status = ConnectionStatus.WAIT;
+        this.status = ConnectionStatus.WAIT;
         this._connector.disconnect();
     }
 }

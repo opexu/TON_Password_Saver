@@ -9,7 +9,7 @@
         :LANG="LANG"
         @load-pass="setScreen"
         @save-pass="setScreen"
-        v-if="calcStatus === ConnectionStatus.ENABLE"
+        v-if="getStatus() === ConnectionStatus.ENABLE"
     ></Main>
 </div>
 </template>
@@ -41,12 +41,6 @@ methods: {
     ...mapActions( useTONStore, ['changeScreen']),
     setScreen( value: SCREEN ){
         this.changeScreen( value );
-    }
-},
-computed: {
-    calcStatus(){
-        const status = this.getStatus();
-        return status;
     }
 },
 components: { Main, TonConnect },

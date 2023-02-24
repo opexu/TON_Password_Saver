@@ -1,18 +1,17 @@
 import { defineStore } from 'pinia'
 import { SCREEN } from '@/_interfaces/screen';
 
-import { WalletConnection } from '@/scripts/WalletConnection';
+import { ConnectionStatus, WalletConnection } from '@/scripts/WalletConnection';
 import type { Wallet } from '@tonconnect/sdk';
 import { reactive } from 'vue';
 
 const useTONStore = defineStore('TONStore', {
     state: () => {
-        
-        const _connection = new WalletConnection();
-        
+            
         return {
-            connection: _connection,
             screenState: SCREEN.WALLET,
+            connectionStatus: ConnectionStatus.DISABLE,
+            deepLink: "",
         }
     },
     actions: {
@@ -20,28 +19,24 @@ const useTONStore = defineStore('TONStore', {
             this.screenState = screenState;
         },
         async connectWallet(){
-            this.connection.initConnection();
-            this.connection.statusChange( this.connection.onStatusChange );
+            console.log('action connectWallet');
         },
         async disconnectWallet(){
-            this.connection.disconnect();
+            console.log('action disconnectWallet');
         },
-        async onStatusChange(){
-
-        }
     },
     getters: {
         getScreen( state ){
             return state.screenState;
         },
         getStatus( state ){
-            console.log('get status', state.connection.status)
-            return state.connection.status;
+            console.log('get status', state.connectionStatus)
+            return state.connectionStatus;
         },
         getDeepLink( state ){
-            return state.connection.deepLink;
+            return state.deepLink;
         },
-    }
+    },
 })
 
 export { useTONStore };
