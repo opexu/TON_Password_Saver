@@ -2,14 +2,16 @@ import { defineStore } from 'pinia'
 import { SCREEN } from '@/_interfaces/screen';
 
 import { WalletConnection } from '@/scripts/WalletConnection';
+import type { Wallet } from '@tonconnect/sdk';
+import { reactive } from 'vue';
 
 const useTONStore = defineStore('TONStore', {
     state: () => {
         
         const _connection = new WalletConnection();
-
+        
         return {
-            connection: _connection,
+            connection: reactive(_connection),
             screenState: SCREEN.WALLET,
         }
     },
