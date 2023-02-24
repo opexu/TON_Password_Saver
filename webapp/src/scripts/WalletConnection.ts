@@ -11,6 +11,7 @@ export enum ConnectionStatus {
 interface IConnection {
     statusChanged?: ( status: ConnectionStatus ) => void;
     deepLinkChanged?: ( deepLink: string ) => void;
+    restoreConnection(): void;
     initConnection(): void;
     disconnect(): void;
 }
@@ -25,7 +26,6 @@ export class WalletConnection implements IConnection {
     private _deepLink: string; 
 
     constructor(){
-        console.log("Start");
 
         this._deepLink = "";
         this._status = ConnectionStatus.DISABLE;
@@ -33,6 +33,8 @@ export class WalletConnection implements IConnection {
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         
         this._connector.onStatusChange( this._onStatusChange.bind(this) );
+    
+        this._connector
     }
 
     set status( status: ConnectionStatus ){
@@ -46,25 +48,21 @@ export class WalletConnection implements IConnection {
     }
 
     private _onStatusChange( wallet: Wallet | null ){
-        // setTimeout(()=>{
-        //     console.log('status change', wallet);
-        //     console.log('this', this);
-        //     this._status = ConnectionStatus.ENABLE;
-        //     if( this.statusChanged ) this.statusChanged( this._status );
-        // },2000)
-        console.log('status change', wallet);
+
         wallet 
             ? this.status = ConnectionStatus.ENABLE
             : this.status = ConnectionStatus.DISABLE
         
     }
 
+    public async restoreConnection(){
+        this._connector.restoreConnection();
+    }
+
     public async initConnection(){
-        console.log('initConnection');
         this.status = ConnectionStatus.WAIT;
 
         const walletsArr = await this._connector.getWallets();
-        console.log('walletsArr',walletsArr)
         
         const embeddedWallet = walletsArr.find( wallet => {
             isWalletInfoInjected( wallet ) && wallet.embedded
@@ -83,7 +81,6 @@ export class WalletConnection implements IConnection {
                 bridgeUrl: bridgeWallet.bridgeUrl,
             })
             this.deepLink = universalLink;
-            console.log('universal link', universalLink );
         }
         else{
             console.warn('no available wallets');

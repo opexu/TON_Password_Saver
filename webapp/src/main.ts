@@ -25,6 +25,7 @@ pinia.use(( obj: PiniaPluginContext ) => {
             }
             case 'disconnectWallet': {
                 connection.disconnect();
+                break;
             }
         }
     });
@@ -39,6 +40,7 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.deepLink = deepLink;
     }
 
+    connection.restoreConnection();
 });
 
 app.use( pinia );

@@ -1,16 +1,20 @@
 <template>
 <div class="w-full h-full flex flex-col">
+    
     <TonConnect
-        :Locale="Locale"
-        :LANG="LANG"
+    :Locale="Locale"
+    :LANG="LANG"
+    v-if="getStatus() !== ConnectionStatus.ENABLE"
     ></TonConnect>
+    
     <Main
-        :Locale="Locale"
-        :LANG="LANG"
-        @load-pass="setScreen"
-        @save-pass="setScreen"
-        v-if="getStatus() === ConnectionStatus.ENABLE"
+    :Locale="Locale"
+    :LANG="LANG"
+    @load-pass="setScreen"
+    @save-pass="setScreen"
+    v-if="getStatus() === ConnectionStatus.ENABLE"
     ></Main>
+
 </div>
 </template>
 

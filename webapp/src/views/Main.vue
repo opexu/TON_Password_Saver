@@ -2,6 +2,12 @@
 <div class="w-full h-full p-4 flex flex-col space-y-4">
     
     <div class="w-full h-full flex flex-row space-x-4">
+        
+        <!-- КНОПКА ОТКЛЮЧЕНИЯ КОШЕЛЬКА -->
+        <button type="button" class="w-16 min-w-fit h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
+        @click="disconnectWallet"
+        >x</button>
+        
         <button class="w-full h-fit p-4 border rounded-md "
         :class="[ getScreen() === SCREEN.LOAD ? 'bg-blue-800' : '' ]"
         @click="loadPasswordClick"
@@ -12,10 +18,6 @@
         @click="savePasswordClick"
         >+</button>
 
-        <!-- КНОПКА ОТКЛЮЧЕНИЯ КОШЕЛЬКА -->
-        <button type="button" class="w-16 min-w-fit h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
-        @click="disconnectWallet"
-        >x</button>
     </div>
 
     <div class="w-full h-full flex flex-row">
