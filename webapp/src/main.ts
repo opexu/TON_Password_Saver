@@ -31,12 +31,10 @@ pinia.use(( obj: PiniaPluginContext ) => {
     });
 
     connection.statusChanged = ( status ) => {
-        console.log('pinia plugin statusChanged', status);
         obj.store.connectionStatus = status;
     };
 
     connection.deepLinkChanged = ( deepLink ) => {
-        console.log('pinia plugin deepLinkChanged', deepLink);
         obj.store.deepLink = deepLink;
     }
 
