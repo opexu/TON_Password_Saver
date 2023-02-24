@@ -53,8 +53,10 @@ export class WalletConnection implements IConnection {
         //     if( this.statusChanged ) this.statusChanged( this._status );
         // },2000)
         console.log('status change', wallet);
-        console.log('this', this);
-        this.status = ConnectionStatus.ENABLE;
+        wallet 
+            ? this.status = ConnectionStatus.ENABLE
+            : this.status = ConnectionStatus.DISABLE
+        
     }
 
     public async initConnection(){
