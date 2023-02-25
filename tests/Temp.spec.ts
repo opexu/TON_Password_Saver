@@ -91,9 +91,11 @@ describe('PasswordSaver', () => {
         /////////////////////////////////////
 
         const newSalt = Buffer.from('RazDvaTri');
+        const newSaltString = newSalt.toString();
         const newsaltByteLength = newSalt.byteLength;
         console.log('change newsaltByteLength: ', newsaltByteLength)
         const newPass = Buffer.from('Chetire');
+        const newPassString = newPass.toString();
         const newpassByteLength = newPass.byteLength;
         console.log('change newpassByteLength: ', newpassByteLength)
 
@@ -112,17 +114,18 @@ describe('PasswordSaver', () => {
         // });
 
         const getNewSalt = await passwordSaver.getSalt();
-        const parcedSalt = getNewSalt.beginParse();
+        const parcedSalt = getNewSalt.asSlice();  //.beginParse();
         const id = parcedSalt.loadUint(32);
-        const sb = parcedSalt.skip(32).loadUint(8);
-        const pb = parcedSalt.skip(40).loadUint(8);
-        const salt = parcedSalt.skip(48).loadBuffer(72);
-        const pass = parcedSalt.skip(120).loadBuffer(56);
-        console.log('Данные после изменения:', getNewSalt, id, sb, pb, salt, pass);
+        const sb = parcedSalt.loadUint(8);
+        const pb = parcedSalt.loadUint(8);
+        const salt = parcedSalt.loadBuffer(sb/8).toString();
+        const pass = parcedSalt.loadBuffer(pb/8).toString();
+        console.log('Данные после изменения:', getNewSalt, parcedSalt,id, sb, pb, salt, pass)//, pb, salt, pass);
         //const bin = getNewSalt.toString(2);
         const buf = getNewSalt.toString();
         console.log('buf1:', newSalt);
         console.log('buf2:', getNewSalt);
-        expect(newSalt).toBe(getNewSalt);
+        expect(newSaltString).toBe(salt);
+        expect(newPassString).toBe(pass);
     });
 });
