@@ -3,16 +3,17 @@ import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, 
 export type PasswordSaverConfig = {
     id: number;
     salt: Buffer;
-    saltBitsLength: number;
+    saltByteLength: number;
     pass: Buffer;
-    passBitsLength: number;
+    passByteLength: number;
+    value: bigint;
 };
 
 export function PasswordSaverConfigToCell(config: PasswordSaverConfig): Cell {
     return beginCell()
         .storeUint( config.id, 32 )
-        .storeUint( config.saltBitsLength * 8, 8 )
-        .storeUint( config.passBitsLength * 8, 8 )
+        .storeUint( config.saltByteLength * 8, 8 )
+        .storeUint( config.passByteLength * 8, 8 )
         .storeBuffer( config.salt )
         .storeBuffer( config.pass )
         .endCell();
@@ -48,9 +49,9 @@ export class PasswordSaver implements Contract {
         via: Sender,
         opts: {
             salt: Buffer;
-            saltBitsLength: number;
+            saltByteLength: number;
             pass: Buffer;
-            passBitsLength: number;
+            passByteLength: number;
             value: bigint;
         }
     ) {
@@ -59,8 +60,8 @@ export class PasswordSaver implements Contract {
             sendMode: SendMode.PAY_GAS_SEPARATLY,
             body: beginCell()
                 .storeUint( Opcodes.increase, 32 )
-                .storeUint( opts.saltBitsLength * 8, 8 )
-                .storeUint( opts.passBitsLength * 8, 8 )
+                .storeUint( opts.saltByteLength * 8, 8 )
+                .storeUint( opts.passByteLength * 8, 8 )
                 .storeBuffer( opts.salt )
                 .storeBuffer( opts.pass )
                 .endCell(),
@@ -69,7 +70,8 @@ export class PasswordSaver implements Contract {
 
     async getSalt(provider: ContractProvider) {
         const result = await provider.get('get_salt', []);
-        return result.stack.readNumber();
+        //return result.stack.readBigNumber();
+        return result.stack.readBuffer();
     }
 
     async getID(provider: ContractProvider) {

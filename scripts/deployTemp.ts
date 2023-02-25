@@ -3,11 +3,19 @@ import { PasswordSaver } from '../wrappers/PasswordSaver';
 import { compile, NetworkProvider } from '@ton-community/blueprint';
 
 export async function run(provider: NetworkProvider) {
+    
+    const salt = Buffer.from("");
+    const saltBitsLength = salt.byteLength;
+    const pass = Buffer.from("");
+    const passBitsLength = pass.byteLength;
+    
     const temp = PasswordSaver.createFromConfig(
         {
             id: Date.now(),
-            salt: Buffer.from(""),
-            pass: Buffer.from(""),
+            salt: salt,
+            saltBitsLength: saltBitsLength,
+            pass: pass,
+            passBitsLength: passBitsLength,
         },
         await compile('Temp')
     );

@@ -12,23 +12,25 @@ describe('PasswordSaver', () => {
     });
 
     it('should deploy', async () => {
+        console.log(" ~~~~~~~~~~~ SHOULD DEPLOY ~~~~~~~~~~~ ")
         const blockchain = await Blockchain.create();
 
         const salt = Buffer.from('Hello');
-        const saltBitsLength = salt.byteLength;
-        console.log('deploy saltBitsLength: ', saltBitsLength);
+        const saltByteLength = salt.byteLength;
+        console.log('deploy saltByteLength: ', saltByteLength);
         const pass = Buffer.from('Pass');
-        const passBitsLength = pass.byteLength;
-        console.log('deploy passBitsLength: ', passBitsLength);
+        const passByteLength = pass.byteLength;
+        console.log('deploy passByteLength: ', passByteLength);
 
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
                 {
                     id: 0,
                     salt: salt,
-                    saltBitsLength: saltBitsLength,
+                    saltByteLength: saltByteLength,
                     pass: pass,
-                    passBitsLength: passBitsLength
+                    passByteLength: passByteLength,
+                    value: toNano('0.05'),
                 },
                 code
             )
@@ -46,23 +48,25 @@ describe('PasswordSaver', () => {
     });
 
     it('should change salt', async () => {
+        console.log(" ~~~~~~~~~~~ CHANGE SALT ~~~~~~~~~~~ ")
         const blockchain = await Blockchain.create();
 
         const startSalt = Buffer.from('Hello');
-        const startSaltBitsLength = startSalt.byteLength;
-        console.log('salt startSaltBitsLength: ', startSaltBitsLength)
+        const startsaltByteLength = startSalt.byteLength;
+        console.log('salt startsaltByteLength: ', startsaltByteLength)
         const startPass = Buffer.from('Pass');
-        const startPassBitsLength = startPass.byteLength;
-        console.log('salt startPassBitsLength: ', startPassBitsLength)
+        const startpassByteLength = startPass.byteLength;
+        console.log('salt startpassByteLength: ', startpassByteLength)
 
         const passwordSaver = blockchain.openContract(
             PasswordSaver.createFromConfig(
                 {
                     id: 0,
                     salt: startSalt,
-                    saltBitsLength: startSaltBitsLength,
+                    saltByteLength: startsaltByteLength,
                     pass: startPass,
-                    passBitsLength: startPassBitsLength
+                    passByteLength: startpassByteLength,
+                    value: toNano('0.05'),
                 },
                 code
             )
@@ -86,18 +90,18 @@ describe('PasswordSaver', () => {
 
         /////////////////////////////////////
 
-        const newSalt = Buffer.from('pizda');
-        const newSaltBitsLength = newSalt.byteLength;
-        console.log('change newSaltBitsLength: ', newSaltBitsLength)
-        const newPass = Buffer.from('nahuy');
-        const newPassBitsLength = newPass.byteLength;
-        console.log('change newPassBitsLength: ', newPassBitsLength)
+        const newSalt = Buffer.from('RazDvaTri');
+        const newsaltByteLength = newSalt.byteLength;
+        console.log('change newsaltByteLength: ', newsaltByteLength)
+        const newPass = Buffer.from('Chetire');
+        const newpassByteLength = newPass.byteLength;
+        console.log('change newpassByteLength: ', newpassByteLength)
 
         const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
             salt: newSalt,
-            saltBitsLength: newSaltBitsLength,
+            saltByteLength: newsaltByteLength,
             pass: newPass,
-            passBitsLength: newPassBitsLength,
+            passByteLength: newpassByteLength,
             value: toNano('0.05'),
         });
 
@@ -109,7 +113,10 @@ describe('PasswordSaver', () => {
 
         const getNewSalt = await passwordSaver.getSalt();
         console.log('Данные после изменения:', getNewSalt);
-
+        //const bin = getNewSalt.toString(2);
+        const buf = getNewSalt.toString();
+        console.log('buf1:', newSalt);
+        console.log('buf2:', buf);
         expect(newSalt).toBe(getNewSalt);
     });
 });
