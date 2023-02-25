@@ -5,17 +5,18 @@ import { compile, NetworkProvider } from '@ton-community/blueprint';
 export async function run(provider: NetworkProvider) {
     
     const salt = Buffer.from("");
-    const saltBitsLength = salt.byteLength;
+    const saltByteLength = salt.byteLength;
     const pass = Buffer.from("");
-    const passBitsLength = pass.byteLength;
+    const passByteLength = pass.byteLength;
     
     const temp = PasswordSaver.createFromConfig(
         {
             id: Date.now(),
             salt: salt,
-            saltBitsLength: saltBitsLength,
+            saltByteLength: saltByteLength,
             pass: pass,
-            passBitsLength: passBitsLength,
+            passByteLength: passByteLength,
+            value: toNano('0.05'),
         },
         await compile('Temp')
     );
