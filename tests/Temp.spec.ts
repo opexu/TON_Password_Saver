@@ -112,11 +112,17 @@ describe('PasswordSaver', () => {
         // });
 
         const getNewSalt = await passwordSaver.getSalt();
-        console.log('Данные после изменения:', getNewSalt);
+        const parcedSalt = getNewSalt.beginParse();
+        const id = parcedSalt.loadUint(32);
+        const sb = parcedSalt.skip(32).loadUint(8);
+        const pb = parcedSalt.skip(40).loadUint(8);
+        const salt = parcedSalt.skip(48).loadBuffer(72);
+        const pass = parcedSalt.skip(120).loadBuffer(56);
+        console.log('Данные после изменения:', getNewSalt, id, sb, pb, salt, pass);
         //const bin = getNewSalt.toString(2);
         const buf = getNewSalt.toString();
         console.log('buf1:', newSalt);
-        console.log('buf2:', buf);
+        console.log('buf2:', getNewSalt);
         expect(newSalt).toBe(getNewSalt);
     });
 });
