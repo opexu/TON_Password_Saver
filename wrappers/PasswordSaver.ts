@@ -11,11 +11,11 @@ export type PasswordSaverConfig = {
 
 export function PasswordSaverConfigToCell(config: PasswordSaverConfig): Cell {
     return beginCell()
-        .storeUint( config.id, 32 )
-        .storeUint( config.saltByteLength * 8, 8 )
-        .storeUint( config.passByteLength * 8, 8 )
-        .storeBuffer( config.salt )
-        .storeBuffer( config.pass )
+        .storeUint(config.id, 32)
+        .storeUint(config.saltByteLength * 8, 8)
+        .storeUint(config.passByteLength * 8, 8)
+        .storeBuffer(config.salt)
+        .storeBuffer(config.pass)
         .endCell();
 }
 
@@ -24,7 +24,7 @@ export const Opcodes = {
 };
 
 export class PasswordSaver implements Contract {
-    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) {}
+    constructor(readonly address: Address, readonly init?: { code: Cell; data: Cell }) { }
 
     static createFromAddress(address: Address) {
         return new PasswordSaver(address);
@@ -44,6 +44,13 @@ export class PasswordSaver implements Contract {
         });
     }
 
+    static createForDeploy(code: Cell, config: PasswordSaverConfig): PasswordSaver {
+        const data = PasswordSaverConfigToCell(config)
+        const workchain = 0; // deploy to workchain 0
+        const address = contractAddress(workchain, { code, data });
+        return new PasswordSaver(address, { code, data });
+    }
+
     async sendSalt(
         provider: ContractProvider,
         via: Sender,
@@ -59,11 +66,11 @@ export class PasswordSaver implements Contract {
             value: opts.value,
             sendMode: SendMode.PAY_GAS_SEPARATLY,
             body: beginCell()
-                .storeUint( Opcodes.increase, 32 )
-                .storeUint( opts.saltByteLength * 8, 8 )
-                .storeUint( opts.passByteLength * 8, 8 )
-                .storeBuffer( opts.salt )
-                .storeBuffer( opts.pass )
+                .storeUint(Opcodes.increase, 32)
+                .storeUint(opts.saltByteLength * 8, 8)
+                .storeUint(opts.passByteLength * 8, 8)
+                .storeBuffer(opts.salt)
+                .storeBuffer(opts.pass)
                 .endCell(),
         });
     }

@@ -81,6 +81,7 @@ describe('PasswordSaver', () => {
             to: passwordSaver.address,
             deploy: true,
         });
+        console.log(deployResult.transactions);
 
         const increaser = await blockchain.treasury('salter');
 
@@ -118,9 +119,9 @@ describe('PasswordSaver', () => {
         const id = parcedSalt.loadUint(32);
         const sb = parcedSalt.loadUint(8);
         const pb = parcedSalt.loadUint(8);
-        const salt = parcedSalt.loadBuffer(sb/8).toString();
-        const pass = parcedSalt.loadBuffer(pb/8).toString();
-        console.log('Данные после изменения:', getNewSalt, parcedSalt,id, sb, pb, salt, pass)//, pb, salt, pass);
+        const salt = parcedSalt.loadBuffer(sb / 8).toString();
+        const pass = parcedSalt.loadBuffer(pb / 8).toString();
+        console.log('Данные после изменения:', getNewSalt, parcedSalt, id, sb, pb, salt, pass)//, pb, salt, pass);
         //const bin = getNewSalt.toString(2);
         const buf = getNewSalt.toString();
         console.log('buf1:', newSalt);
