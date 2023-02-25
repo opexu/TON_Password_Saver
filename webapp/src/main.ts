@@ -5,6 +5,11 @@ import App from '@/App.vue';
 
 import './main.css';
 
+// import process from "process";
+// import { Buffer } from "buffer";
+// window.process = process;
+// window.Buffer = Buffer;
+
 // declare module 'pinia'{
 //     export interface PiniaCustomProperties {
 //         connection: WalletConnection;
@@ -25,6 +30,14 @@ pinia.use(( obj: PiniaPluginContext ) => {
             }
             case 'disconnectWallet': {
                 connection.disconnect();
+                break;
+            }
+            case 'getPassword': {
+                connection.getPassword();
+                break;
+            }
+            case 'savePassword': {
+                connection.savePassword( action.args[0], action.args[1] );
                 break;
             }
         }

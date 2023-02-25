@@ -4,7 +4,8 @@ const path = require('node:path')
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// https://vitejs.dev/config/
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+
 export default defineConfig({
     plugins: [vue()],
     root: path.resolve(__dirname, 'src'),
@@ -24,4 +25,17 @@ export default defineConfig({
     esbuild: {
         //drop: ['console', 'debugger'],
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            define: {
+                global: 'globalThis'
+            },
+            plugins: [
+                NodeGlobalsPolyfillPlugin({
+                    buffer: true,
+                    process: true,
+                })
+            ]
+        }
+    }
 })

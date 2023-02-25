@@ -57,6 +57,8 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { Language } from '@/params/language';
+import { mapActions } from 'pinia';
+import { useTONStore } from '@/store/store';
 
 export default defineComponent({
 props: {
@@ -80,6 +82,7 @@ data: () => {
     }
 },
 methods: {
+    ...mapActions( useTONStore, ['savePassword']),
     onPinInput(){
 
         const numbersPattern = /[0-9]/g;
@@ -113,12 +116,14 @@ methods: {
         this.approveInProcess = true;
 
         try {
-            // TODO APPROVE
-            await new Promise(( resolve, reject ) => {
-                setTimeout(()=>{
-                    resolve( true );
-                }, 2000);
-            });
+            
+            this.savePassword( this.pin, this.password );
+
+            // await new Promise(( resolve, reject ) => {
+            //     setTimeout(()=>{
+            //         resolve( true );
+            //     }, 2000);
+            // });
             
         } catch( error ) {
             console.warn('error', error);

@@ -12,11 +12,16 @@ const useTONStore = defineStore('TONStore', {
         }
     },
     actions: {
+
         async changeScreen( screenState: SCREEN ){
             this.screenState = screenState;
         },
+
         async connectWallet(){},
         async disconnectWallet(){},
+
+        async getPassword(){},
+        async savePassword( pin: string, password: string ){},
     },
     getters: {
         getScreen: ( state ) => ( state.screenState ),
