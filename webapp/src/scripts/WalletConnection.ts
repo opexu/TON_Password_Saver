@@ -133,7 +133,7 @@ export class WalletConnection implements IConnection {
             messages: [
                 {
                     address: "EQDb7Cez-o_jFCN5MJcFhBEsqWU7tynQJFBIL3uhmjX-J8_d",
-                    amount: "10_000_000",
+                    amount: "10000000",
                     //stateInit: "",
                     payload: payload,
                 }
