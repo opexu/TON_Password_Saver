@@ -148,7 +148,7 @@ export class WalletConnection implements IConnection {
 
         } catch ( e ) {
             if( e instanceof UserRejectsError ) {
-                console.warn( 'You rejected the transaction. Please confirm it to send to the blockchain' );
+                console.warn( 'You rejected the transaction. Please confirm it to send to the blockchain', e );
             } 
             else {
                 console.warn( 'Unknown error happened', e );
