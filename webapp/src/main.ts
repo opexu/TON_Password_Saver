@@ -1,14 +1,9 @@
-import { createApp, markRaw, ref } from 'vue';
+import { createApp } from 'vue';
 import { createPinia, type PiniaPluginContext } from 'pinia';
-import { ConnectionStatus, WalletConnection } from './scripts/WalletConnection';
+import { WalletConnection } from './scripts/WalletConnection';
 import App from '@/App.vue';
 
 import './main.css';
-
-// import process from "process";
-// import { Buffer } from "buffer";
-// window.process = process;
-// window.Buffer = Buffer;
 
 // declare module 'pinia'{
 //     export interface PiniaCustomProperties {

@@ -10,6 +10,7 @@
         "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
         "@tonconnect/protocol": "^2.2.3",
         "@tonconnect/sdk": "^2.0.7",
+        "buffer": "^6.0.3",
         "pinia": "^2.0.28npm",
         "ton": "^13.3.0",
         "tonweb": "^0.0.60",

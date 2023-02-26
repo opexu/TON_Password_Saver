@@ -5,12 +5,13 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { inject } from 'vue'
 
 export default defineConfig({
     plugins: [vue()],
     root: path.resolve(__dirname, 'src'),
     build: {
-        outDir: 'dist'
+        outDir: 'dist',
     },
     base: ((process.env.GITHUB_REPOSITORY ?? "") + "/").match(/(\/.*)/)?.[1],
     server: {
@@ -19,7 +20,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            buffer: 'buffer/',
         }
     },
     esbuild: {
@@ -33,8 +35,7 @@ export default defineConfig({
             plugins: [
                 NodeGlobalsPolyfillPlugin({
                     buffer: true,
-                    process: true,
-                })
+                }),
             ]
         }
     }
