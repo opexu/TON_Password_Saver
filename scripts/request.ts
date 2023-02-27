@@ -46,7 +46,7 @@ async function request() {
     // send the deploy transaction
     //const passwordSaverContract = client.open(passwordSaver);
     //await passwordSaverContract.sendDeploy(walletSender,BigInt(1));
-    const ps_address = Address.parse("EQDpkoje7MbmqjhUhwLFg3SHEWbemLDVyIC3YuxclGSi9M_H")
+    const ps_address = Address.parse("EQDb7Cez-o_jFCN5MJcFhBEsqWU7tynQJFBIL3uhmjX-J8_d")
     const ps = new PasswordSaver(ps_address);
     const current_ps = client.open(ps);
     const getNewSalt = await current_ps.getSalt();

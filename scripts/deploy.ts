@@ -15,7 +15,7 @@ async function deploy() {
     const passwordSaver = PasswordSaver.createForDeploy(
         passwordSaverCode,
         {
-            id: 0,
+            id: 55667788,
             salt: Buffer.from("Hello"),
             saltByteLength: 5,
             pass: Buffer.from("Pass"),
@@ -34,7 +34,7 @@ async function deploy() {
     const key = await mnemonicToWalletKey(mnemonic.split(" "));
     const wallet = WalletContractV4.create({ publicKey: key.publicKey, workchain: 0 });
     console.log(wallet.address);
-    
+
     if (!await client.isContractDeployed(wallet.address)) {
         return console.log("wallet is not deployed");
     }
@@ -45,7 +45,7 @@ async function deploy() {
 
     // send the deploy transaction
     const passwordSaverContract = client.open(passwordSaver);
-    await passwordSaverContract.sendDeploy(walletSender,BigInt(1));
+    await passwordSaverContract.sendDeploy(walletSender, toNano("0.1"));
 
     // wait until confirmed
     let currentSeqno = seqno;
