@@ -79,6 +79,7 @@ export class PasswordSaver implements Contract {
         const result = await provider.get('get_salt', []);
         //return result.stack.readBigNumber();
         return result.stack.readCell();
+        //return result.stack.readString();
     }
 
     async getID(provider: ContractProvider) {
