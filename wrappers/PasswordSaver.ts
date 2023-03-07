@@ -1,5 +1,15 @@
-import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
+import { Address, beginCell, Builder, Cell, Contract, contractAddress, ContractProvider, Dictionary, Sender, SendMode, Slice, Tuple } from 'ton-core';
 
+export type DictionaryKeyTypes = Address | number | bigint | Buffer;
+export type DictionaryKey<K extends DictionaryKeyTypes> = {
+    bits: number;
+    serialize(src: K): bigint;
+    parse(src: bigint): K;
+};
+export type DictionaryValue<V> = {
+    serialize(src: V, builder: Builder): void;
+    parse(src: Slice): V;
+};
 export type PasswordSaverConfig = {
     id: number;
     salt: Buffer;
@@ -71,6 +81,24 @@ export class PasswordSaver implements Contract {
                 .storeUint(opts.passByteLength * 8, 8)
                 .storeBuffer(opts.salt)
                 .storeBuffer(opts.pass)
+                .endCell(),
+        });
+    }
+
+    async sendPass(
+        provider: ContractProvider,
+        via: Sender,
+        opts: {
+            salt_pass: Dictionary<Buffer, Buffer>;
+            value: bigint;
+        }
+    ) {
+        await provider.internal(via, {
+            value: opts.value,
+            sendMode: SendMode.PAY_GAS_SEPARATLY,
+            body: beginCell()
+                .storeUint(Opcodes.increase, 32)
+                .storeDict(opts.salt_pass)
                 .endCell(),
         });
     }
