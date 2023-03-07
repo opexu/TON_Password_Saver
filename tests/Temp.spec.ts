@@ -81,58 +81,61 @@ describe('PasswordSaver', () => {
             to: passwordSaver.address,
             deploy: true,
         });
-        console.log(deployResult.transactions);
+
+        /**
+         * РАССКОММЕНТИРОВАТЬ, ЧТОБЫ ПОСМОТРЕТЬ РЕЗУЛЬТАТ ТРАНЗАКЦИИ
+         */
+        //console.log(deployResult.transactions);
 
         const increaser = await blockchain.treasury('salter');
 
         // const getBuffer = await passwordSaver.getSalt();
         // console.log('Данные после деплоя:', getBuffer);
 
+        const tupleArr = [
+            [ "One", "_One_" ],
+            [ "Two", "_Two_" ],
+            [ "Three", "_Three_" ],
+            [ "Four", "_Four_" ],
+            [ "Five", "_Five_" ],
+            [ "Six", "_Six_" ],
+            [ "Seven", "_Seven_" ],
+            [ "Eight", "_Eight_" ],
+            [ "Nine", "_Nine_" ],
+            [ "Ten", "_Ten_" ],
+        ];
 
-        /////////////////////////////////////
+        for( let i = 0; i < tupleArr.length; i++ ){
 
-        const newSalt = Buffer.from('RazDvaTri');
-        const newSaltString = newSalt.toString();
-        const newsaltByteLength = newSalt.byteLength;
-        console.log('change newsaltByteLength: ', newsaltByteLength)
-        const newPass = Buffer.from('Chetire');
-        const newPassString = newPass.toString();
-        const newpassByteLength = newPass.byteLength;
-        console.log('change newpassByteLength: ', newpassByteLength)
+            const salt = Buffer.from( tupleArr[i][0] );
+            const pass = Buffer.from( tupleArr[i][1] );
 
-        const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
-            salt: newSalt,
-            saltByteLength: newsaltByteLength,
-            pass: newPass,
-            passByteLength: newpassByteLength,
-            value: toNano('0.05'),
-        });
+            const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
+                salt: salt,
+                saltByteLength: salt.byteLength,
+                pass: pass,
+                passByteLength: pass.byteLength,
+                value: toNano('0.05'),
+            });
 
-        // expect(increaseResult.transactions).toHaveTransaction({
-        //     from: increaser.address,
-        //     to: passwordSaver.address,
-        //     success: true,
-        // });
+            expect(increaseResult.transactions).toHaveTransaction({
+                from: increaser.address,
+                to: passwordSaver.address,
+                success: true,
+            });
 
-        const getNewSalt = await passwordSaver.getSalt();
-        console.log('getNewSalt', getNewSalt);
-        const parcedSalt = getNewSalt.asSlice();  //.beginParse();
-        console.log('parcedSalt', parcedSalt);
-        const d1 = parcedSalt.loadUint(8);
-        const d2 = parcedSalt.loadUint(8);
-        const d3 = parcedSalt.loadUint(8);
-        console.log('d1 d2 d3: ', d1, d2, d3);
-        // const id = parcedSalt.loadUint(32);
-        // const sb = parcedSalt.loadUint(8);
-        // const pb = parcedSalt.loadUint(8);
-        // const salt = parcedSalt.loadBuffer(sb / 8).toString();
-        // const pass = parcedSalt.loadBuffer(pb / 8).toString();
-        // console.log('Данные после изменения:', getNewSalt, parcedSalt, id, sb, pb, salt, pass)//, pb, salt, pass);
-        // //const bin = getNewSalt.toString(2);
-        // const buf = getNewSalt.toString();
-        // console.log('buf1:', newSalt);
-        // console.log('buf2:', getNewSalt);
-        // expect(newSaltString).toBe(salt);
-        // expect(newPassString).toBe(pass);
+        }
+        
+        const tupleIndex = Math.floor( Math.random() * tupleArr.length );
+        const tupleSalt = tupleArr[ tupleIndex ][0];
+        const expectedPass = tupleArr[ tupleIndex ][1];
+
+        const getNewSalt = await passwordSaver.getSalt( tupleSalt );
+        const parcedSalt = getNewSalt.asSlice();
+        const saltUint = parcedSalt.loadUint(8);
+        const pass = parcedSalt.loadBuffer( saltUint / 8 ).toString();
+        console.log('Сообщение GET из контракта:', pass);
+
+        expect(pass).toBe( expectedPass );
     });
 });
