@@ -91,15 +91,9 @@ export class WalletConnection implements IConnection {
         
     }
 
-    public async restoreConnection(){
-        this._connector.restoreConnection();
-    }
-
-    public async initConnection(){
-        this.status = ConnectionStatus.WAIT;
-
+    private async _getTonKeeper(): Promise<{ embeddedWallet: WalletInfoInjected, bridgeWallet: WalletInfoRemote }>{
         const walletsArr = await this._connector.getWallets();
-        
+
         const embeddedWallet = walletsArr.find( wallet => {
             isWalletInfoInjected( wallet ) && wallet.embedded
         }) as WalletInfoInjected;
@@ -107,6 +101,21 @@ export class WalletConnection implements IConnection {
         const bridgeWallet = walletsArr.find( wallet => {
             return wallet.name === "Tonkeeper";
         }) as WalletInfoRemote;
+        
+        return {
+            embeddedWallet,
+            bridgeWallet
+        }
+    }
+
+    public async restoreConnection(){
+        this._connector.restoreConnection();
+    }
+
+    public async initConnection(){
+        this.status = ConnectionStatus.WAIT;
+
+        const { embeddedWallet, bridgeWallet } = await this._getTonKeeper();
 
         if ( embeddedWallet ) {
             this._connector.connect({ jsBridgeKey: embeddedWallet.jsBridgeKey });
@@ -151,7 +160,7 @@ export class WalletConnection implements IConnection {
         }
 
         try{
-            const result = await tonClient.callGetMethod( 
+            const result = await tonClient.runMethod( 
                     address.address, 
                     CONFIG.TESTNET.GET_METHOD_NAME,
                     [stackPayload]
@@ -200,7 +209,7 @@ export class WalletConnection implements IConnection {
 
         try {
             this.isTransactionSended = true;
-            
+
             const result = await this._connector.sendTransaction( transaction );
             console.log('result', result);
             

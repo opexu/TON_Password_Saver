@@ -50,7 +50,8 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.isTransactionSended = value;
     }
 
-    connection.restoreConnection();
+    connection.disconnect();
+    //connection.restoreConnection();
 });
 
 app.use( pinia );
