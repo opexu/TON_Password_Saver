@@ -190,6 +190,11 @@ export class WalletConnection implements IConnection {
         try {
             const result = await this._connector.sendTransaction( transaction );
             console.log('result', result);
+            const cell = Cell.fromBase64(result.boc);
+            const slice = cell.asSlice();
+            const str = slice.toString();
+            console.log('cell', cell);
+            console.log('str', str);
             //const someTxData = await this._connector.getTransaction( result.boc );
             //console.log( 'someTxData: ', someTxData );
 
