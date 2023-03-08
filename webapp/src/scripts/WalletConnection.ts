@@ -89,7 +89,7 @@ export class WalletConnection implements IConnection {
         console.log('wallet', wallet);
         
         if( wallet ){
-            if( this.deepLink !== "" ){
+            if( this.deepLink === "" ){
                 console.log('get Tonkeeper');
                 const { bridgeWallet } = await this._getTonKeeper();
                 const universalLink = this._connector.connect({
