@@ -44,7 +44,7 @@
 
     <div class="w-full h-full flex flex-col">
         <button type="button" class="w-full h-fit p-4 mt-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
-        :disabled="!isPinValid || !isPasswordValid || approveInProcess"
+        :disabled="!isPinValid || !isPasswordValid || getIsTransactionSended()"
 
         @click="approveTransaction"
         >
