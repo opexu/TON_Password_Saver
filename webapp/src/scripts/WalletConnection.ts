@@ -1,7 +1,7 @@
 import { Base64 } from '@tonconnect/protocol';
 import TonConnect, { UserRejectsError, isWalletInfoInjected, type WalletInfoInjected, type SendTransactionRequest, type Wallet, type WalletInfoRemote } from '@tonconnect/sdk';
 import TonWeb from "tonweb";
-import { Address, beginCell, TonClient, TupleReader } from 'ton';
+import { Address, beginCell, Cell, TonClient, TupleReader } from 'ton';
 
 import { CONFIG } from '@/params/config';
 import type { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
@@ -125,7 +125,7 @@ export class WalletConnection implements IConnection {
 
         console.log('salt: ', salt);
 
-        const payload = GenerateGetPayload( salt );
+        const payload = await GenerateGetPayload( salt );
 
         const tonClient = new TonClient({
             endpoint: CONFIG.TESTNET.END_POINT,
@@ -136,7 +136,7 @@ export class WalletConnection implements IConnection {
         
         const stackPayload: TupleItemSlice = {
             type: "slice",
-            cell: payload
+            cell: Cell.fromBase64(payload)
         }
 
         try{
@@ -205,7 +205,7 @@ export class WalletConnection implements IConnection {
 
 }
 
-function GenerateGetPayload( salt: string ): any {
+async function GenerateGetPayload( salt: string ): Promise<string> {
 
     // const saltBuffer = new TextEncoder().encode( salt );
     // const saltByteLength = saltBuffer.byteLength;
@@ -215,10 +215,10 @@ function GenerateGetPayload( salt: string ): any {
 
     cell.bits.writeString( salt );
 
-    // const bocBytes = await cell.toBoc();
-    // const bocString = Base64.encode( bocBytes );
+    const bocBytes = await cell.toBoc();
+    const bocString = Base64.encode( bocBytes );
 
-    return cell;
+    return bocString;
 }
 
 async function GenerateSendPayload( salt: string, password: string ): Promise<string> {
