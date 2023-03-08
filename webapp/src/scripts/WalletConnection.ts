@@ -135,11 +135,6 @@ export class WalletConnection implements IConnection {
                 bridgeUrl: bridgeWallet.bridgeUrl,
             })
             this.deepLink = universalLink;
-            console.log('deepLink', universalLink);
-            console.log('bridgeWallet.universalLink', bridgeWallet.universalLink);
-            console.log('bridgeWallet.bridgeUrl', bridgeWallet.bridgeUrl);
-            // TODO REMOVE
-            //this.status = ConnectionStatus.ENABLE;
         }
         else{
             console.warn('no available wallets');
@@ -178,7 +173,7 @@ export class WalletConnection implements IConnection {
                 );
 
             const resultCell = result.stack.readCell();
-            let resultSlice = resultCell.asSlice();
+            const resultSlice = resultCell.beginParse();
             console.log('resultSlice', resultSlice);
             const passUint = resultSlice.loadUint(8);
             console.log('passUint', passUint);
