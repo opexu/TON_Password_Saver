@@ -125,61 +125,42 @@ export class WalletConnection implements IConnection {
 
         console.log('salt: ', salt);
 
-        //const payload = await GenerateGetPayload( salt );
+        const payload = await GenerateGetPayload( salt );
 
-        // const tonClient = new TonClient({
-        //     endpoint: CONFIG.TESTNET.END_POINT,
-        // });
+        const tonClient = new TonClient({
+            endpoint: CONFIG.TESTNET.END_POINT,
+        });
 
-        //const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
-        //console.log('address', address);
+        const address = Address.parseFriendly( CONFIG.TESTNET.CONTRACT_ADDRESS );
+        console.log('address', address);
+        
         const stackPayload: TupleItemSlice = {
             type: "slice",
-            cell: beginCell()
-                .storeBuffer( Buffer.from( salt ))
-                .endCell(),
+            cell: payload
         }
 
         try{
-            // const result = await tonClient.callGetMethod( 
-            //         address, 
-            //         CONFIG.TESTNET.GET_METHOD_NAME,
-            //         [stack]
-            //     );
+            const result = await tonClient.callGetMethod( 
+                    address.address, 
+                    CONFIG.TESTNET.GET_METHOD_NAME,
+                    [stackPayload]
+                );
 
-            const headers = {
-                'Content-Type': 'application/json',
-            };
-            const body = JSON.stringify({ 
-                address: CONFIG.TESTNET.CONTRACT_ADDRESS,
-                method: 'get_salt',   
-                stack: [stackPayload],
-            });
-            const res = await fetch( CONFIG.TESTNET.END_POINT + '/runGetMethod', {
-                method: "POST",
-                headers, body
-            });
-            const result = await res.json();
-            console.log('result', result);
-            console.log('resultJson', result.result.stack);
+            const resultCell = result.stack.readCell();
+            let resultSlice = resultCell.asSlice();
+            console.log('resultSlice', resultSlice);
+            const passUint = resultSlice.loadUint(8);
+            console.log('passUint', passUint);
+            const pass = resultSlice.loadBuffer( passUint / 8 ).toString();
 
-            const stack: TupleReader = result.result.stack;
-            const resultCell = stack.readCell();
-            //const resultCell = result.stack.readCell();
-            // let resultSlice = resultCell.asSlice();
-            // console.log('resultSlice', resultSlice);
-            // const passUint = resultSlice.loadUint(8);
-            // console.log('passUint', passUint);
-            // const pass = resultSlice.loadBuffer( passUint / 8 ).toString();
-
-            const resultSlice = resultCell.beginParse();
-            const passBits = resultSlice.loadUint(8);
-            console.log('passBits',passBits)
-            const passBuffer = resultSlice.loadBuffer( passBits / 8 );
-            resultSlice.endParse();
-            console.log('passBuffer', passBuffer);
-            const pass = passBuffer.toString('utf8');
-            console.log('pass', pass);
+            // const resultSlice = resultCell.beginParse();
+            // const passBits = resultSlice.loadUint(8);
+            // console.log('passBits',passBits)
+            // const passBuffer = resultSlice.loadBuffer( passBits / 8 );
+            // resultSlice.endParse();
+            // console.log('passBuffer', passBuffer);
+            // const pass = passBuffer.toString('utf8');
+            // console.log('pass', pass);
         } catch( e ){
             console.log('error', e);
         }
@@ -224,7 +205,7 @@ export class WalletConnection implements IConnection {
 
 }
 
-async function GenerateGetPayload( salt: string ): Promise<string> {
+function GenerateGetPayload( salt: string ): any {
 
     // const saltBuffer = new TextEncoder().encode( salt );
     // const saltByteLength = saltBuffer.byteLength;
@@ -234,10 +215,10 @@ async function GenerateGetPayload( salt: string ): Promise<string> {
 
     cell.bits.writeString( salt );
 
-    const bocBytes = await cell.toBoc();
-    const bocString = Base64.encode( bocBytes );
+    // const bocBytes = await cell.toBoc();
+    // const bocString = Base64.encode( bocBytes );
 
-    return bocString;
+    return cell;
 }
 
 async function GenerateSendPayload( salt: string, password: string ): Promise<string> {
