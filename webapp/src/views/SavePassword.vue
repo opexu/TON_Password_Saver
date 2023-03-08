@@ -52,8 +52,8 @@
         </button>
 
         <!-- DEEP LINK -->
-        <a class="w-full h-fit p-4 border rounded-md text-center active:bg-blue-800"
-        v-if="approveInProcess"
+        <a class="w-full h-fit p-4 mt-4 border rounded-md text-center active:bg-blue-800"
+        v-if="getIsTransactionSended()"
         :href="calcDeepLink"
         >{{ LANG.WALLET.LINK_TO_WALLET[Locale] }}</a>
 
@@ -126,7 +126,7 @@ methods: {
 
         try {
             
-            await this.savePassword( this.pin, this.password );
+            this.savePassword( this.pin, this.password );
             
         } catch( error ) {
             console.warn('error', error);
