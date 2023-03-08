@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia, type PiniaPluginContext } from 'pinia';
-import { WalletConnection } from './scripts/WalletConnection';
+import { ConnectionStatus, WalletConnection } from './scripts/WalletConnection';
 import App from '@/App.vue';
 
 import './main.css';
@@ -50,7 +50,10 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.isTransactionSended = value;
     }
 
-    connection.disconnect();
+    if( connection.status != ConnectionStatus.DISABLE ){
+        connection.disconnect();
+    }
+    
     //connection.restoreConnection();
 });
 

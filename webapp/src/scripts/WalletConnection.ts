@@ -1,7 +1,7 @@
 import { Base64 } from '@tonconnect/protocol';
 import TonConnect, { UserRejectsError, isWalletInfoInjected, type WalletInfoInjected, type SendTransactionRequest, type Wallet, type WalletInfoRemote } from '@tonconnect/sdk';
 import TonWeb from "tonweb";
-import { Address, beginCell, Cell, TonClient, TupleReader } from 'ton';
+import { Address, beginCell, Cell, Slice, TonClient, TupleReader } from 'ton';
 
 import { CONFIG } from '@/params/config';
 import type { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
@@ -58,6 +58,7 @@ export class WalletConnection implements IConnection {
 
     }
 
+    get status(){ return this._status; }
     set status( status: ConnectionStatus ){
         this._status = status;
         if( this.statusChanged ) this.statusChanged( this._status );
@@ -126,7 +127,9 @@ export class WalletConnection implements IConnection {
                 bridgeUrl: bridgeWallet.bridgeUrl,
             })
             this.deepLink = universalLink;
-
+            console.log('deepLink', universalLink);
+            console.log('bridgeWallet.universalLink', bridgeWallet.universalLink);
+            console.log('bridgeWallet.bridgeUrl', bridgeWallet.bridgeUrl);
             // TODO REMOVE
             //this.status = ConnectionStatus.ENABLE;
         }
@@ -250,22 +253,37 @@ async function GenerateSendPayload( salt: string, password: string ): Promise<st
 	
     const op = 0x7e8764ef; // increase
 
-    const saltBuffer = new TextEncoder().encode( salt );
+    // const saltBuffer = new TextEncoder().encode( salt );
+    // const saltByteLength = saltBuffer.byteLength;
+    // const passBuffer = new TextEncoder().encode( password );
+    // const passByteLength = passBuffer.byteLength;
+
+    // const Cell = TonWeb.boc.Cell;
+    // const cell = new Cell();
+
+    // cell.bits.writeUint( op, 32 );
+    // cell.bits.writeUint( saltByteLength * 8, 8 )
+    // cell.bits.writeUint( passByteLength * 8, 8 )
+    // cell.bits.writeString( salt );
+    // cell.bits.writeString( password );
+
+    // const bocBytes = await cell.toBoc();
+    // const bocString = Base64.encode( bocBytes );
+    
+    const saltBuffer = Buffer.from( salt );
     const saltByteLength = saltBuffer.byteLength;
-    const passBuffer = new TextEncoder().encode( password );
+    const passBuffer = Buffer.from( password );
     const passByteLength = passBuffer.byteLength;
 
-    const Cell = TonWeb.boc.Cell;
-    const cell = new Cell();
+    const cell = beginCell()
+        .storeUint( op, 32 )
+        .storeUint( saltByteLength * 8, 8)
+        .storeUint( passByteLength * 8, 8)
+        .storeBuffer( saltBuffer )
+        .storeBuffer( passBuffer )
+        .endCell();
 
-    cell.bits.writeUint( op, 32 );
-    cell.bits.writeUint( saltByteLength * 8, 8 )
-    cell.bits.writeUint( passByteLength * 8, 8 )
-    cell.bits.writeString( salt );
-    cell.bits.writeString( password );
-
-    const bocBytes = await cell.toBoc();
-    const bocString = Base64.encode( bocBytes );
+    const bocString = cell.toBoc().toString('base64');
 
     return bocString;
 }
