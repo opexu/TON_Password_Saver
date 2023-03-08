@@ -20,7 +20,7 @@ const useTONStore = defineStore('TONStore', {
         async connectWallet(){},
         async disconnectWallet(){},
 
-        async getPassword(){},
+        async getPassword( pin: string ){},
         async savePassword( pin: string, password: string ){},
     },
     getters: {

@@ -118,12 +118,6 @@ methods: {
         try {
             
             this.savePassword( this.pin, this.password );
-
-            // await new Promise(( resolve, reject ) => {
-            //     setTimeout(()=>{
-            //         resolve( true );
-            //     }, 2000);
-            // });
             
         } catch( error ) {
             console.warn('error', error);

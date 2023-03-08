@@ -28,7 +28,7 @@ pinia.use(( obj: PiniaPluginContext ) => {
                 break;
             }
             case 'getPassword': {
-                connection.getPassword();
+                connection.getPassword( action.args[0] );
                 break;
             }
             case 'savePassword': {
