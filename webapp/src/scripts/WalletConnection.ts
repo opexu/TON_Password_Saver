@@ -150,16 +150,12 @@ export class WalletConnection implements IConnection {
             const headers = {
                 'Content-Type': 'application/json',
             };
-            const body = JSON.stringify({
-                jsonrpc: "2.0",
-                method: 'runGetMethod',
-                params: { 
-                    address: CONFIG.TESTNET.CONTRACT_ADDRESS,
-                    method: 'get_salt',   
-                    stack: [stackPayload],
-                }
+            const body = JSON.stringify({ 
+                address: CONFIG.TESTNET.CONTRACT_ADDRESS,
+                method: 'get_salt',   
+                stack: [stackPayload],
             });
-            const res = await fetch( CONFIG.TESTNET.END_POINT, {
+            const res = await fetch( CONFIG.TESTNET.END_POINT + '/runGetMethod', {
                 method: "POST",
                 headers, body
             });
