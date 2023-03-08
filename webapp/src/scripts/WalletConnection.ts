@@ -176,6 +176,7 @@ export class WalletConnection implements IConnection {
             const resultSlice = resultCell.beginParse();
             console.log('resultSlice', resultSlice);
             const passUint = resultSlice.loadUint(8);
+            resultSlice.skip(8);
             console.log('passUint', passUint);
             const pass = resultSlice.loadBuffer( passUint / 8 ).toString();
 
