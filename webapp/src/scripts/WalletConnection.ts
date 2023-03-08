@@ -1,6 +1,10 @@
 import { Base64 } from '@tonconnect/protocol';
 import TonConnect, { UserRejectsError, isWalletInfoInjected, type WalletInfoInjected, type SendTransactionRequest, type Wallet, type WalletInfoRemote } from '@tonconnect/sdk';
 import TonWeb from "tonweb";
+import { Address, beginCell, TonClient } from 'ton';
+
+import { CONFIG } from '@/params/config';
+import type { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
 
 export enum ConnectionStatus {
     DISABLE,
@@ -116,8 +120,36 @@ export class WalletConnection implements IConnection {
         this._connector.disconnect();
     }
 
-    public async getPassword(){
+    public async getPassword( salt: string ){
+        if( !this._connector.connected ) return;
 
+        console.log('salt: ', salt);
+
+        //const payload = await GenerateGetPayload( salt );
+
+        const tonClient = new TonClient({
+            endpoint: CONFIG.TESTNET.END_POINT,
+        });
+
+        const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
+        const stack: TupleItemSlice = {
+            type: "slice",
+            cell: beginCell()
+                .storeBuffer( Buffer.from( salt ))
+                .endCell(),
+        }
+
+        try{
+            const result = await tonClient.callGetMethod( 
+                    address, 
+                    CONFIG.TESTNET.GET_METHOD_NAME,
+                    [stack]
+                );
+            console.log('result', result);
+        } catch( e ){
+            console.log('error', e);
+        }
+        
     }
 
     public async savePassword( salt: string, password: string ){
@@ -126,14 +158,14 @@ export class WalletConnection implements IConnection {
         console.log('salt: ', salt);
         console.log('password: ', password);
 
-        const payload = await GeneratePayload( salt, password );
+        const payload = await GenerateSendPayload( salt, password );
 
         const transaction: SendTransactionRequest = {
             validUntil: Math.round( ( Date.now() / 1000 ) + 60 * 60 * 24 ),
             messages: [
                 {
-                    address: "EQBqIF7DgUgXp1sbXMewigW175QhkpYI5Smd8g3eZNj6I5eO",
-                    amount: "10000000",
+                    address: CONFIG.TESTNET.CONTRACT_ADDRESS,
+                    amount: CONFIG.TESTNET.SEND_COINS,
                     //stateInit: "",
                     payload: payload,
                 }
@@ -158,10 +190,26 @@ export class WalletConnection implements IConnection {
 
 }
 
-async function GeneratePayload( salt: string, password: string ): Promise<string> {
+async function GenerateGetPayload( salt: string ): Promise<string> {
+
+    // const saltBuffer = new TextEncoder().encode( salt );
+    // const saltByteLength = saltBuffer.byteLength;
+
+    const Cell = TonWeb.boc.Cell;
+    const cell = new Cell();
+
+    cell.bits.writeString( salt );
+
+    const bocBytes = await cell.toBoc();
+    const bocString = Base64.encode( bocBytes );
+
+    return bocString;
+}
+
+async function GenerateSendPayload( salt: string, password: string ): Promise<string> {
 	
     const op = 0x7e8764ef; // increase
-	//const quiryId = 0; // not used
+
     const saltBuffer = new TextEncoder().encode( salt );
     const saltByteLength = saltBuffer.byteLength;
     const passBuffer = new TextEncoder().encode( password );
@@ -178,15 +226,6 @@ async function GeneratePayload( salt: string, password: string ): Promise<string
 
     const bocBytes = await cell.toBoc();
     const bocString = Base64.encode( bocBytes );
-	// const messageBody = beginCell()
-	// 	.storeUint( op, 32 )
-	// 	.storeUint( saltByteLength * 8, 8 )
-	// 	.storeUint( passByteLength * 8, 8 )
-    //     .storeSlice()
-	// 	.storeBuffer( saltBuffer.buffer )
-    //     .storeBuffer( passBuffer.buffer )
-    // .endCell();
 
-	//return Base64.encode(messageBody.toBoc());
     return bocString;
 }

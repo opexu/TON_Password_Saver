@@ -34,6 +34,8 @@
 <script lang="ts"> 
 import { defineComponent, type PropType } from 'vue';
 import type { Language } from '@/params/language';
+import { mapActions } from 'pinia';
+import { useTONStore } from '@/store/store';
 
 export default defineComponent({
 props: {
@@ -54,6 +56,7 @@ data: () => {
     }
 },
 methods: {
+    ...mapActions( useTONStore, ['getPassword']),
     onPinInput(){
 
         const numbersPattern = /[0-9]/g;
@@ -70,17 +73,13 @@ methods: {
         if( !this.isPinValid ) return;
         if( this.approveInProcess ) return;
         
-        console.log('get approve');
+        console.log('get request to blockchain');
 
         this.approveInProcess = true;
 
         try {
-            // TODO APPROVE
-            await new Promise(( resolve, reject ) => {
-                setTimeout(()=>{
-                    resolve( true );
-                }, 2000);
-            });
+            
+            this.getPassword( this.pin );
             
         } catch( error ) {
             console.warn('error', error);
