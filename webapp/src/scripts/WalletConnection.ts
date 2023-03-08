@@ -151,7 +151,7 @@ export class WalletConnection implements IConnection {
 
         console.log('salt: ', salt);
 
-        const payload = await GenerateGetPayload( salt );
+        const payload = GenerateGetPayload( salt );
 
         const tonClient = new TonClient({
             endpoint: CONFIG.TESTNET.END_POINT,
@@ -236,7 +236,7 @@ export class WalletConnection implements IConnection {
 
 }
 
-async function GenerateGetPayload( salt: string ): Promise<string> {
+function GenerateGetPayload( salt: string ): string {
 
     // const saltBuffer = new TextEncoder().encode( salt );
     // const saltByteLength = saltBuffer.byteLength;
