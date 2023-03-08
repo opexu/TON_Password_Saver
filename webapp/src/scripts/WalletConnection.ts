@@ -1,7 +1,7 @@
 import { Base64 } from '@tonconnect/protocol';
 import TonConnect, { UserRejectsError, isWalletInfoInjected, type WalletInfoInjected, type SendTransactionRequest, type Wallet, type WalletInfoRemote } from '@tonconnect/sdk';
 import TonWeb from "tonweb";
-import { Address, beginCell, TonClient } from 'ton';
+import { Address, beginCell, TonClient, TupleReader } from 'ton';
 
 import { CONFIG } from '@/params/config';
 import type { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
@@ -127,14 +127,13 @@ export class WalletConnection implements IConnection {
 
         //const payload = await GenerateGetPayload( salt );
 
-        const tonClient = new TonClient({
-            endpoint: CONFIG.TESTNET.END_POINT,
-        });
+        // const tonClient = new TonClient({
+        //     endpoint: CONFIG.TESTNET.END_POINT,
+        // });
 
         //const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
-        const address = new Address( 0, Buffer.from( CONFIG.TESTNET.CONTRACT_ADDRESS ) );
-        console.log('address', address);
-        const stack: TupleItemSlice = {
+        //console.log('address', address);
+        const stackPayload: TupleItemSlice = {
             type: "slice",
             cell: beginCell()
                 .storeBuffer( Buffer.from( salt ))
@@ -142,14 +141,35 @@ export class WalletConnection implements IConnection {
         }
 
         try{
-            const result = await tonClient.callGetMethod( 
-                    address, 
-                    CONFIG.TESTNET.GET_METHOD_NAME,
-                    [stack]
-                );
-            console.log('result', result);
+            // const result = await tonClient.callGetMethod( 
+            //         address, 
+            //         CONFIG.TESTNET.GET_METHOD_NAME,
+            //         [stack]
+            //     );
 
-            const resultCell = result.stack.readCell();
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+            const body = JSON.stringify({
+                jsonrpc: "2.0",
+                method: 'runGetMethod',
+                params: { 
+                    address: CONFIG.TESTNET.CONTRACT_ADDRESS,
+                    method: 'get_salt',   
+                    stack: [stackPayload],
+                }
+            });
+            const res = await fetch( CONFIG.TESTNET.END_POINT, {
+                method: "POST",
+                headers, body
+            });
+            const result = await res.json();
+            console.log('result', result);
+            console.log('resultJson', result.result.stack);
+
+            const stack: TupleReader = result.result.stack;
+            const resultCell = stack.readCell();
+            //const resultCell = result.stack.readCell();
             // let resultSlice = resultCell.asSlice();
             // console.log('resultSlice', resultSlice);
             // const passUint = resultSlice.loadUint(8);
