@@ -136,7 +136,7 @@ export class WalletConnection implements IConnection {
     }
 
     public async disconnect() {
-        this.status = ConnectionStatus.WAIT;
+        //this.status = ConnectionStatus.WAIT;
         this._connector.disconnect();
     }
 
