@@ -90,8 +90,13 @@ export class WalletConnection implements IConnection {
         
         if( wallet ){
             if( this.deepLink !== "" ){
+                console.log('get Tonkeeper');
                 const { bridgeWallet } = await this._getTonKeeper();
-                this.deepLink = bridgeWallet.universalLink;
+                const universalLink = this._connector.connect({
+                    universalLink: bridgeWallet.universalLink,
+                    bridgeUrl: bridgeWallet.bridgeUrl,
+                })
+                this.deepLink = universalLink;
             }
             //https://app.tonkeeper.com/ton-connect?v=2&id=7797b11b10e39ae8c155fae3bb65302e7c3191d5575278fbc327d01b28a45a7e&r=%7B%22manifestUrl%22%3A%22https%3A%2F%2Fraw.githubusercontent.com%2Fopexu%2FTON_Password_Saver%2Fmain%2Fwebapp%2Fsrc%2Ftonconnect-manifest.json%22%2C%22items%22%3A%5B%7B%22name%22%3A%22ton_addr%22%7D%5D%7D
         }
@@ -149,7 +154,7 @@ export class WalletConnection implements IConnection {
     }
 
     public async disconnect() {
-        //this.status = ConnectionStatus.WAIT;
+        this.status = ConnectionStatus.WAIT;
         this._connector.disconnect();
     }
 
