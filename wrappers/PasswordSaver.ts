@@ -86,24 +86,6 @@ export class PasswordSaver implements Contract {
         });
     }
 
-    async sendPass(
-        provider: ContractProvider,
-        via: Sender,
-        opts: {
-            salt_pass: Dictionary<Buffer, Buffer>;
-            value: bigint;
-        }
-    ) {
-        await provider.internal(via, {
-            value: opts.value,
-            sendMode: SendMode.PAY_GAS_SEPARATLY,
-            body: beginCell()
-                .storeUint(Opcodes.increase, 32)
-                .storeDict(opts.salt_pass)
-                .endCell(),
-        });
-    }
-
     async getSalt(provider: ContractProvider, args: string ) {
         
         const payload: TupleItemSlice = {

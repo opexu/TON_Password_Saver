@@ -132,7 +132,7 @@ export class WalletConnection implements IConnection {
             validUntil: Math.round( ( Date.now() / 1000 ) + 60 * 60 * 24 ),
             messages: [
                 {
-                    address: "EQDb7Cez-o_jFCN5MJcFhBEsqWU7tynQJFBIL3uhmjX-J8_d",
+                    address: "EQBqIF7DgUgXp1sbXMewigW175QhkpYI5Smd8g3eZNj6I5eO",
                     amount: "10000000",
                     //stateInit: "",
                     payload: payload,
