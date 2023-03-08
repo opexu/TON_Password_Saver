@@ -31,12 +31,16 @@ export class WalletConnection implements IConnection {
     public saltChanged?: ( salt: string ) => void
     public passwordChanged?: ( password: string ) => void;
 
+    public isTransactionSendChanged?: ( value: boolean ) => void;
+
     private readonly _connector: TonConnect;
     private _status: ConnectionStatus;
     private _deepLink: string;
 
     private _salt: string;
     private _password: string;
+
+    private _isTransactionSended: boolean;
 
     constructor(){
 
@@ -45,6 +49,8 @@ export class WalletConnection implements IConnection {
         
         this._salt = "";
         this._password = "";
+
+        this._isTransactionSended = false;
 
         this._connector = new TonConnect({ manifestUrl: 'https://raw.githubusercontent.com/opexu/TON_Password_Saver/main/webapp/src/tonconnect-manifest.json'});    
         
@@ -70,6 +76,11 @@ export class WalletConnection implements IConnection {
     set password( password: string ){
         this._password = password;
         if( this.passwordChanged ) this.passwordChanged( this._password );
+    }
+
+    set isTransactionSended( value: boolean ){
+        this._isTransactionSended = value;
+        if( this.isTransactionSendChanged ) this.isTransactionSendChanged( this._isTransactionSended );
     }
 
     private _onStatusChange( wallet: Wallet | null ){
@@ -188,13 +199,11 @@ export class WalletConnection implements IConnection {
         }
 
         try {
+            this.isTransactionSended = true;
+            
             const result = await this._connector.sendTransaction( transaction );
             console.log('result', result);
-            const cell = Cell.fromBase64(result.boc);
-            const slice = cell.asSlice();
-            const str = slice.toString();
-            console.log('cell', cell);
-            console.log('str', str);
+            
             //const someTxData = await this._connector.getTransaction( result.boc );
             //console.log( 'someTxData: ', someTxData );
 
@@ -205,6 +214,8 @@ export class WalletConnection implements IConnection {
             else {
                 console.warn( 'Unknown error happened', e );
             }
+        } finally {
+            this.isTransactionSended = false;
         }
     }
 

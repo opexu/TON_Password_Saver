@@ -63,8 +63,13 @@ const LANG: Language = {
         },
         
         APPROVE_BTN_TEXT: {
-            "ru-RU": "Подтвердить транзакцию TON кошельком",
-            "en-EN": "Approve by TON wallet",
+            "ru-RU": "Создать запрос",
+            "en-EN": "Create request",
+        },
+
+        APPROVE_BTN_WALLET_LINK: {
+            "ru-RU": "Подтвердить через кошелек",
+            "en-EN": "Approve by wallet",
         },
         
         APPROVE_OK_MESSAGE: {

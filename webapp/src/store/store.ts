@@ -9,6 +9,7 @@ const useTONStore = defineStore('TONStore', {
             screenState: SCREEN.WALLET,
             connectionStatus: ConnectionStatus.DISABLE,
             deepLink: "",
+            isTransactionSended: false
         }
     },
     actions: {
@@ -27,6 +28,7 @@ const useTONStore = defineStore('TONStore', {
         getScreen: ( state ) => ( state.screenState ),
         getStatus: ( state ) => ( state.connectionStatus ),
         getDeepLink: ( state ) => ( state.deepLink ),
+        getIsTransactionSended: ( state ) => ( state.isTransactionSended ),
     },
 })
 

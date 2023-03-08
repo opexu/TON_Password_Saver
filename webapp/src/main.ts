@@ -46,6 +46,10 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.deepLink = deepLink;
     }
 
+    connection.isTransactionSendChanged = ( value ) => {
+        obj.store.isTransactionSended = value;
+    }
+
     connection.restoreConnection();
 });
 

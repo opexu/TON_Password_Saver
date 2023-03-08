@@ -45,10 +45,18 @@
     <div class="w-full h-full flex flex-col">
         <button type="button" class="w-full h-fit p-4 mt-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
         :disabled="!isPinValid || !isPasswordValid || approveInProcess"
+
         @click="approveTransaction"
         >
             {{ LANG.PASSWORD_SAVER.APPROVE_BTN_TEXT[Locale] }}
         </button>
+
+        <!-- DEEP LINK -->
+        <a class="w-full h-fit p-4 border rounded-md text-center active:bg-blue-800"
+        v-if="approveInProcess"
+        :href="calcDeepLink"
+        >{{ LANG.WALLET.LINK_TO_WALLET[Locale] }}</a>
+
     </div>
 </form>
 </div>
@@ -57,7 +65,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { Language } from '@/params/language';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { useTONStore } from '@/store/store';
 
 export default defineComponent({
@@ -82,6 +90,7 @@ data: () => {
     }
 },
 methods: {
+    ...mapState( useTONStore, ['getStatus', 'getDeepLink', 'getIsTransactionSended'] ),
     ...mapActions( useTONStore, ['savePassword']),
     onPinInput(){
 
@@ -117,7 +126,7 @@ methods: {
 
         try {
             
-            this.savePassword( this.pin, this.password );
+            await this.savePassword( this.pin, this.password );
             
         } catch( error ) {
             console.warn('error', error);
@@ -125,6 +134,12 @@ methods: {
             this.approveInProcess = false;
         }
     }
+},
+computed:{
+    calcDeepLink(){
+        const deepLink = this.getDeepLink();
+        return deepLink;
+    },
 }
 });
 </script>
