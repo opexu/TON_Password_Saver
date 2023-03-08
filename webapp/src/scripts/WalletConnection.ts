@@ -58,12 +58,13 @@ export class WalletConnection implements IConnection {
 
     }
 
-    get status(){ return this._status; }
+    get status(){ return this._status; };
     set status( status: ConnectionStatus ){
         this._status = status;
         if( this.statusChanged ) this.statusChanged( this._status );
     }
 
+    get deepLink(){ return this._deepLink; };
     set deepLink( deepLink: string ){
         this._deepLink = deepLink;
         if( this.deepLinkChanged ) this.deepLinkChanged( this._deepLink );
@@ -84,12 +85,20 @@ export class WalletConnection implements IConnection {
         if( this.isTransactionSendChanged ) this.isTransactionSendChanged( this._isTransactionSended );
     }
 
-    private _onStatusChange( wallet: Wallet | null ){
+    private async _onStatusChange( wallet: Wallet | null ){
+        console.log('wallet', wallet);
+        
+        if( wallet ){
+            if( this.deepLink !== "" ){
+                const { bridgeWallet } = await this._getTonKeeper();
+                this.deepLink = bridgeWallet.universalLink;
+            }
+            //https://app.tonkeeper.com/ton-connect?v=2&id=7797b11b10e39ae8c155fae3bb65302e7c3191d5575278fbc327d01b28a45a7e&r=%7B%22manifestUrl%22%3A%22https%3A%2F%2Fraw.githubusercontent.com%2Fopexu%2FTON_Password_Saver%2Fmain%2Fwebapp%2Fsrc%2Ftonconnect-manifest.json%22%2C%22items%22%3A%5B%7B%22name%22%3A%22ton_addr%22%7D%5D%7D
+        }
 
         wallet 
             ? this.status = ConnectionStatus.ENABLE
             : this.status = ConnectionStatus.DISABLE
-        
     }
 
     private async _getTonKeeper(): Promise<{ embeddedWallet: WalletInfoInjected, bridgeWallet: WalletInfoRemote }>{
@@ -110,6 +119,7 @@ export class WalletConnection implements IConnection {
     }
 
     public async restoreConnection(){
+        this.status = ConnectionStatus.WAIT;
         this._connector.restoreConnection();
     }
 
@@ -238,13 +248,19 @@ async function GenerateGetPayload( salt: string ): Promise<string> {
     // const saltBuffer = new TextEncoder().encode( salt );
     // const saltByteLength = saltBuffer.byteLength;
 
-    const Cell = TonWeb.boc.Cell;
-    const cell = new Cell();
+    // const Cell = TonWeb.boc.Cell;
+    // const cell = new Cell();
 
-    cell.bits.writeString( salt );
+    // cell.bits.writeString( salt );
 
-    const bocBytes = await cell.toBoc();
-    const bocString = Base64.encode( bocBytes );
+    // const bocBytes = await cell.toBoc();
+    // const bocString = Base64.encode( bocBytes );
+
+    const cell = beginCell()
+        .storeBuffer( Buffer.from( salt ) )
+        .endCell();
+
+    const bocString = cell.toBoc().toString('base64');
 
     return bocString;
 }

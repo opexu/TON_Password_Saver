@@ -50,11 +50,11 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.isTransactionSended = value;
     }
 
-    if( connection.status != ConnectionStatus.DISABLE ){
-        connection.disconnect();
-    }
+    // if( connection.status != ConnectionStatus.DISABLE ){
+    //     connection.disconnect();
+    // }
     
-    //connection.restoreConnection();
+    connection.restoreConnection();
 });
 
 app.use( pinia );
