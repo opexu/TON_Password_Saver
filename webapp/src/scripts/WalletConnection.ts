@@ -125,7 +125,7 @@ export class WalletConnection implements IConnection {
 
         console.log('salt: ', salt);
 
-        const payload = await GenerateGetPayload( salt );
+        const payload = GenerateGetPayload( salt );
 
         const tonClient = new TonClient({
             endpoint: CONFIG.TESTNET.END_POINT,
