@@ -131,7 +131,9 @@ export class WalletConnection implements IConnection {
             endpoint: CONFIG.TESTNET.END_POINT,
         });
 
-        const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
+        //const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
+        const address = new Address( 0, Buffer.from( CONFIG.TESTNET.CONTRACT_ADDRESS ) );
+        console.log('address', address);
         const stack: TupleItemSlice = {
             type: "slice",
             cell: beginCell()
