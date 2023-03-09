@@ -176,9 +176,10 @@ export class WalletConnection implements IConnection {
             const resultSlice = resultCell.beginParse();
             console.log('resultSlice', resultSlice);
             const passUint = resultSlice.loadUint(8);
-            resultSlice.skip(8);
-            console.log('passUint', passUint);
-            const pass = resultSlice.loadBuffer( passUint / 8 ).toString();
+            //resultSlice.skip(8);
+            //console.log('passUint', passUint);
+            const pass = resultSlice.loadBits( passUint / 8 ).toString();
+            //const pass = resultSlice.loadBuffer( passUint ).toString();
 
             // const resultSlice = resultCell.beginParse();
             // const passBits = resultSlice.loadUint(8);
@@ -187,7 +188,7 @@ export class WalletConnection implements IConnection {
             // resultSlice.endParse();
             // console.log('passBuffer', passBuffer);
             // const pass = passBuffer.toString('utf8');
-            // console.log('pass', pass);
+            console.log('pass', pass);
         } catch( e ){
             console.log('error', e);
         }
