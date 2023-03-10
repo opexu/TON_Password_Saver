@@ -91,24 +91,23 @@ describe('PasswordSaver', () => {
 
         // const getBuffer = await passwordSaver.getSalt();
         // console.log('Данные после деплоя:', getBuffer);
-
         const tupleArr = [
-            [ "One", "_One_" ],
-            [ "Two", "_Two_" ],
-            [ "Three", "_Three_" ],
-            [ "Four", "_Four_" ],
-            [ "Five", "_Five_" ],
-            [ "Six", "_Six_" ],
-            [ "Seven", "_Seven_" ],
-            [ "Eight", "_Eight_" ],
-            [ "Nine", "_Nine_" ],
-            [ "Ten", "_Ten_" ],
+            ["One", "_One_"],
+            ["Two", "_Two_"],
+            ["Three", "_Three_"],
+            ["Four", "_Four_"],
+            ["Five", "_Five_"],
+            ["Six", "_Six_"],
+            ["Seven", "_Seven_"],
+            ["Eight", "_Eight_"],
+            ["Nine", "_Nine_"],
+            ["Ten", "_Ten_"],
         ];
 
-        for( let i = 0; i < tupleArr.length; i++ ){
+        for (let i = 0; i < tupleArr.length; i++) {
 
-            const salt = Buffer.from( tupleArr[i][0] );
-            const pass = Buffer.from( tupleArr[i][1] );
+            const salt = Buffer.from(tupleArr[i][0]);
+            const pass = Buffer.from(tupleArr[i][1]);
 
             const increaseResult = await passwordSaver.sendSalt(increaser.getSender(), {
                 salt: salt,
@@ -125,17 +124,17 @@ describe('PasswordSaver', () => {
             });
 
         }
-        
-        const tupleIndex = Math.floor( Math.random() * tupleArr.length );
-        const tupleSalt = tupleArr[ tupleIndex ][0];
-        const expectedPass = tupleArr[ tupleIndex ][1];
 
-        const getNewSalt = await passwordSaver.getSalt( tupleSalt );
+        const tupleIndex = Math.floor(Math.random() * tupleArr.length);
+        const tupleSalt = tupleArr[tupleIndex][0];
+        const expectedPass = tupleArr[tupleIndex][1];
+
+        const getNewSalt = await passwordSaver.getSalt(tupleSalt);
         const parcedSalt = getNewSalt.asSlice();
         const saltUint = parcedSalt.loadUint(8);
-        const pass = parcedSalt.loadBuffer( saltUint / 8 ).toString();
+        const pass = parcedSalt.loadBuffer(saltUint / 8).toString();
         console.log('Сообщение GET из контракта:', pass);
 
-        expect(pass).toBe( expectedPass );
+        expect(pass).toBe(expectedPass);
     });
 });
