@@ -33,7 +33,7 @@
         <label for="receive-password" class="w-full h-fit">{{ LANG.PASSWORD_LOADER.PASS_LABEL[Locale] }}</label>
         <div class="w-full h-fit flex flex-row space-x-4">
             <p id="receive-password" class="w-full h-fit p-4 border rounded-md bg-inherit focus-visible:outline-none focus-visible:border-blue-600"
-            >{{ getReceivedPassword }}</p>
+            >{{ getReceivedPassword() }}</p>
         </div>
     </div>
 
