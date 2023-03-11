@@ -4,18 +4,19 @@ import { mnemonicToWalletKey } from "ton-crypto";
 import { TonClient, Cell, WalletContractV4, toNano, WalletContractV3R2, WalletContractV3R1 } from "ton";
 import { PasswordSaver } from "../wrappers/PasswordSaver"; // this is the interface class from step 7
 import { mnemonic } from "../config/config";
+import path from "path";
 async function deploy() {
     // initialize ton rpc client on testnet
     const endpoint = await getHttpEndpoint({ network: "testnet" });
     const client = new TonClient({ endpoint });
 
     // prepare Counter's initial code and data cells for deployment
-    const passwordSaverCode = Cell.fromBoc(fs.readFileSync("Password_Saver.cell"))[0]; // compilation output from step 6
+    const passwordSaverCode = Cell.fromBoc(fs.readFileSync(path.join( __dirname, "..", "contracts", "!Password_Saver.boc" )))[0]; // compilation output from step 6
 
     const passwordSaver = PasswordSaver.createForDeploy(
         passwordSaverCode,
         {
-            id: 556677891,
+            id: 556677894,
             salt: Buffer.from("Hello"),
             saltByteLength: 5,
             pass: Buffer.from("Pass"),
