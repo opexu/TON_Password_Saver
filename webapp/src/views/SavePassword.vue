@@ -1,9 +1,9 @@
 <template>
-<div class="w-full h-full flex flex-col">
+<div class="w-full h-fit flex flex-col">
 <form autocomplete="off" enctype="multipart/form-data" method="post" class="space-y-8">
     
     <!-- ПИН -->
-    <div class="w-full h-full flex flex-col">
+    <div class="w-full h-fit flex flex-col">
         <label for="pin" class="w-full h-fit">{{ LANG.PASSWORD_SAVER.PIN_LABEL[Locale] }}</label>
         <div class="w-full h-fit flex flex-row space-x-4">
             <input id="pin" ref="pin" 
@@ -20,7 +20,7 @@
     </div>
 
     <!-- ПАРОЛЬ -->
-    <div class="w-full h-full flex flex-col">
+    <div class="w-full h-fit flex flex-col">
         <label for="pass" class="w-full h-fit">{{ LANG.PASSWORD_SAVER.PASS_LABEL[Locale] }}</label>
         <div class="w-full h-fit flex flex-row space-x-4">
             <input id="pass" ref="pass" 
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="w-full h-full flex flex-col">
+    <div class="w-full h-fit flex flex-col">
         <button type="button" class="w-full h-fit p-4 mt-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
         :disabled="!isPinValid || !isPasswordValid || getIsTransactionSended()"
 

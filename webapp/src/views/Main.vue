@@ -1,7 +1,7 @@
 <template>
-<div class="w-full h-full p-4 flex flex-col space-y-4">
+<div class="w-full h-fit p-4 flex flex-col space-y-4">
     
-    <div class="w-full h-full flex flex-row space-x-4">
+    <div class="w-full h-fit flex flex-row space-x-4">
         
         <!-- КНОПКА ОТКЛЮЧЕНИЯ КОШЕЛЬКА -->
         <button type="button" class="w-16 min-w-fit h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
@@ -20,7 +20,7 @@
 
     </div>
 
-    <div class="w-full h-full flex flex-row">
+    <div class="w-full h-fit flex flex-row">
         <LoadPassword
         :Locale="Locale"
         :LANG="LANG"

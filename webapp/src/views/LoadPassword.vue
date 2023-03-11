@@ -1,9 +1,9 @@
 <template>
-<div class="w-full h-full flex flex-col">
+<div class="w-full h-fit flex flex-col">
 <form autocomplete="off" enctype="multipart/form-data" method="post" class="space-y-8">
     
     <!-- ПИН -->
-    <div class="w-full h-full flex flex-col">
+    <div class="w-full h-fit flex flex-col">
         <label for="pin" class="w-full h-fit">{{ LANG.PASSWORD_LOADER.PIN_LABEL[Locale] }}</label>
         <div class="w-full h-fit flex flex-row space-x-4">
             <input id="pin" ref="pin" 
@@ -29,7 +29,7 @@
     </div>
 
     <!-- ПОЛУЧЕННЫЙ ПАРОЛЬ -->
-    <div class="w-full h-full mt-4 flex flex-col"
+    <div class="w-full h-fit mt-4 flex flex-col"
     v-if="getReceivedPassword() !== ''">
         <label for="receive-password" class="w-full h-fit">{{ LANG.PASSWORD_LOADER.PASS_LABEL[Locale] }}</label>
         <div class="w-full h-fit flex flex-row space-x-4">

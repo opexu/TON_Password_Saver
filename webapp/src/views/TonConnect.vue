@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full p-4 flex flex-col space-y-4">
+<div class="w-full h-fit p-4 flex flex-col space-y-4">
     
     <!-- КНОПКА ПОДКЛЮЧЕНИЯ КОШЕЛЬКА -->
     <button type="button" class="w-full h-fit p-4 border rounded-md [&:not([disabled])]:active:bg-blue-800 disabled:border-slate-600 disabled:text-slate-600"
