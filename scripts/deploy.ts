@@ -15,12 +15,12 @@ async function deploy() {
     const passwordSaver = PasswordSaver.createForDeploy(
         passwordSaverCode,
         {
-            id: 556677890,
+            id: 556677891,
             salt: Buffer.from("Hello"),
             saltByteLength: 5,
             pass: Buffer.from("Pass"),
             passByteLength: 4,
-            value: toNano('0.05'),
+            value: toNano('0.1'),
         }
     );
 
