@@ -46,13 +46,13 @@ pinia.use(( obj: PiniaPluginContext ) => {
         obj.store.deepLink = deepLink;
     }
 
+    connection.receivedPasswordChanged = ( password ) => {
+        obj.store.receivedPassword = password;
+    }
+
     connection.isTransactionSendChanged = ( value ) => {
         obj.store.isTransactionSended = value;
     }
-
-    // if( connection.status != ConnectionStatus.DISABLE ){
-    //     connection.disconnect();
-    // }
     
     connection.restoreConnection();
 });

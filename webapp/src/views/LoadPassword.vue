@@ -27,6 +27,16 @@
             {{ LANG.PASSWORD_LOADER.APPROVE_BTN_TEXT[Locale] }}
         </button>
     </div>
+
+    <!-- ПОЛУЧЕННЫЙ ПАРОЛЬ -->
+    <div class="w-full h-full mt-4 flex flex-col">
+        <label for="receive-password" class="w-full h-fit">{{ LANG.PASSWORD_LOADER.PASS_LABEL[Locale] }}</label>
+        <div class="w-full h-fit flex flex-row space-x-4">
+            <p id="receive-password" class="w-full h-fit p-4 border rounded-md bg-inherit focus-visible:outline-none focus-visible:border-blue-600"
+            >{{ getReceivedPassword }}</p>
+        </div>
+    </div>
+
 </form>
 </div>
 </template>
@@ -34,7 +44,7 @@
 <script lang="ts"> 
 import { defineComponent, type PropType } from 'vue';
 import type { Language } from '@/params/language';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { useTONStore } from '@/store/store';
 
 export default defineComponent({
@@ -56,6 +66,7 @@ data: () => {
     }
 },
 methods: {
+    ...mapState( useTONStore, ['getReceivedPassword']),
     ...mapActions( useTONStore, ['getPassword']),
     onPinInput(){
 

@@ -95,14 +95,19 @@ const LANG: Language = {
             "en-EN": "Enter the PIN that you entered when submitting your password",
         },
 
+        PASS_LABEL: {
+            "ru-RU": "Сохраненный пароль",
+            "en-EN": "Saved password",
+        },
+
         PIN_HELPER: {
             "ru-RU": "Минимум: 4 латинских символа, 1 нижнего регистра, 1 число",
             "en-EN": "Minimum: 4 en characters, 1 lowercase letter, 1 number",
         },
 
         APPROVE_BTN_TEXT: {
-            "ru-RU": "Подтвердить транзакцию TON кошельком",
-            "en-EN": "Approve by TON wallet",
+            "ru-RU": "Получить пароль",
+            "en-EN": "Get password",
         },
         
         APPROVE_OK_MESSAGE: {

@@ -30,6 +30,7 @@ export class WalletConnection implements IConnection {
 
     public saltChanged?: ( salt: string ) => void
     public passwordChanged?: ( password: string ) => void;
+    public receivedPasswordChanged?: ( password: string ) => void;
 
     public isTransactionSendChanged?: ( value: boolean ) => void;
 
@@ -39,6 +40,7 @@ export class WalletConnection implements IConnection {
 
     private _salt: string;
     private _password: string;
+    private _receivedPassword: string;
 
     private _isTransactionSended: boolean;
 
@@ -49,6 +51,7 @@ export class WalletConnection implements IConnection {
         
         this._salt = "";
         this._password = "";
+        this._receivedPassword = "";
 
         this._isTransactionSended = false;
 
@@ -78,6 +81,11 @@ export class WalletConnection implements IConnection {
     set password( password: string ){
         this._password = password;
         if( this.passwordChanged ) this.passwordChanged( this._password );
+    }
+
+    set receivedPassword( password: string ){
+        this._receivedPassword = password;
+        if( this.receivedPasswordChanged ) this.receivedPasswordChanged( this._receivedPassword );
     }
 
     set isTransactionSended( value: boolean ){
@@ -158,7 +166,6 @@ export class WalletConnection implements IConnection {
         });
 
         const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
-        console.log('address', address);
         
         const stackPayload: TupleItemCell = {
             type: "cell",
@@ -176,12 +183,11 @@ export class WalletConnection implements IConnection {
             const resultSlice = cell.beginParse();
 
             const passBits = resultSlice.loadUint(8);
-            console.log('passBits',passBits)
             const passBuffer = resultSlice.loadBuffer( passBits / 8 );
-            //resultSlice.endParse();
-            console.log('passBuffer', passBuffer);
             const pass = passBuffer.toString('utf8');
-            console.log('pass', pass);
+
+            this.receivedPassword = pass;
+            
         } catch( e ){
             console.log('error', e);
         }
@@ -202,7 +208,6 @@ export class WalletConnection implements IConnection {
                 {
                     address: CONFIG.TESTNET.CONTRACT_ADDRESS,
                     amount: CONFIG.TESTNET.SEND_COINS,
-                    //stateInit: "",
                     payload: payload,
                 }
             ]
@@ -214,9 +219,6 @@ export class WalletConnection implements IConnection {
             const result = await this._connector.sendTransaction( transaction );
             console.log('result', result);
             
-            //const someTxData = await this._connector.getTransaction( result.boc );
-            //console.log( 'someTxData: ', someTxData );
-
         } catch ( e ) {
             if( e instanceof UserRejectsError ) {
                 console.warn( 'You rejected the transaction. Please confirm it to send to the blockchain', e );
@@ -233,17 +235,6 @@ export class WalletConnection implements IConnection {
 
 function GenerateGetPayload( salt: string ): string {
 
-    // const saltBuffer = new TextEncoder().encode( salt );
-    // const saltByteLength = saltBuffer.byteLength;
-
-    // const Cell = TonWeb.boc.Cell;
-    // const cell = new Cell();
-
-    // cell.bits.writeString( salt );
-
-    // const bocBytes = await cell.toBoc();
-    // const bocString = Base64.encode( bocBytes );
-
     const saltBuffer = Buffer.from( salt );
 
     const cell = beginCell()
@@ -259,35 +250,14 @@ function GenerateGetPayload( salt: string ): string {
 async function GenerateSendPayload( salt: string, password: string ): Promise<string> {
 	
     const op = 0x7e8764ef; // increase
-    //const query_id = 
-    
-    // const saltBuffer = new TextEncoder().encode( salt );
-    // const saltByteLength = saltBuffer.byteLength;
-    // const passBuffer = new TextEncoder().encode( password );
-    // const passByteLength = passBuffer.byteLength;
-
-    // const Cell = TonWeb.boc.Cell;
-    // const cell = new Cell();
-
-    // cell.bits.writeUint( op, 32 );
-    // cell.bits.writeUint( saltByteLength * 8, 8 )
-    // cell.bits.writeUint( passByteLength * 8, 8 )
-    // cell.bits.writeString( salt );
-    // cell.bits.writeString( password );
-
-    // const bocBytes = await cell.toBoc();
-    // const bocString = Base64.encode( bocBytes );
     
     const saltBuffer = Buffer.from( salt );
-    const saltByteLength = saltBuffer.byteLength;
     const passBuffer = Buffer.from( password );
-    const passByteLength = passBuffer.byteLength;
 
     const cell = beginCell()
         .storeUint( op, 32 )
-        //.storeUint( query_id, 64 )
-        .storeUint( saltByteLength * 8, 8)
-        .storeUint( passByteLength * 8, 8)
+        .storeUint( saltBuffer.byteLength * 8, 8)
+        .storeUint( passBuffer.byteLength * 8, 8)
         .storeBuffer( saltBuffer )
         .storeBuffer( passBuffer )
         .endCell();
