@@ -174,17 +174,7 @@ export class WalletConnection implements IConnection {
             
             const cell = stack.readCell();
             const resultSlice = cell.beginParse();
-            // console.log('resultSlice', resultSlice);
-            // const flag = resultSlice.loadUint(8);
-            // console.log('flag', flag);
-            // const passUint = resultSlice.loadUint(8);
-            // console.log('passUint', passUint);
-            // //resultSlice.skip(8);
-            // //console.log('passUint', passUint);
-            // const pass = resultSlice.loadBits( passUint ).toString();
-            //const pass = resultSlice.loadBuffer( passUint ).toString();
 
-            // const resultSlice = resultCell.beginParse();
             const passBits = resultSlice.loadUint(8);
             console.log('passBits',passBits)
             const passBuffer = resultSlice.loadBuffer( passBits / 8 );
@@ -254,8 +244,11 @@ function GenerateGetPayload( salt: string ): string {
     // const bocBytes = await cell.toBoc();
     // const bocString = Base64.encode( bocBytes );
 
+    const saltBuffer = Buffer.from( salt );
+
     const cell = beginCell()
-        .storeBuffer( Buffer.from( salt ) )
+        .storeUint( saltBuffer.byteLength * 8, 8 )
+        .storeBuffer( saltBuffer )
         .endCell();
 
     const bocString = cell.toBoc().toString('base64');
