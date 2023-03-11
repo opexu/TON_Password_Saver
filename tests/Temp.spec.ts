@@ -77,7 +77,7 @@ describe('PasswordSaver', () => {
                 passByteLength: pass.byteLength,
                 value: toNano('0.1'),
             });
-            //console.log('increaseResult',increaseResult)
+
             // expect(increaseResult.transactions).toHaveTransaction({
             //     from: increaser.address,
             //     to: passwordSaver.address,
