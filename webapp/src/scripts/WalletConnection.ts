@@ -4,7 +4,7 @@ import TonWeb from "tonweb";
 import { Address, beginCell, Cell, Slice, TonClient, TupleReader } from 'ton';
 
 import { CONFIG } from '@/params/config';
-import type { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
+import type { TupleItemCell, TupleItemSlice } from 'ton-core/dist/tuple/tuple';
 
 export enum ConnectionStatus {
     DISABLE,
@@ -160,8 +160,8 @@ export class WalletConnection implements IConnection {
         const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
         console.log('address', address);
         
-        const stackPayload: TupleItemSlice = {
-            type: "slice",
+        const stackPayload: TupleItemCell = {
+            type: "cell",
             cell: Cell.fromBase64(payload)
         }
 
@@ -172,25 +172,25 @@ export class WalletConnection implements IConnection {
                     [stackPayload]
                 );
             
-            const contentRoot = stack.readCell();
-            const resultSlice = contentRoot.beginParse();
-            console.log('resultSlice', resultSlice);
-            const flag = resultSlice.loadUint(8);
-            console.log('flag', flag);
-            const passUint = resultSlice.loadUint(8);
-            console.log('passUint', passUint);
-            //resultSlice.skip(8);
-            //console.log('passUint', passUint);
-            const pass = resultSlice.loadBits( passUint ).toString();
+            const cell = stack.readCell();
+            const resultSlice = cell.beginParse();
+            // console.log('resultSlice', resultSlice);
+            // const flag = resultSlice.loadUint(8);
+            // console.log('flag', flag);
+            // const passUint = resultSlice.loadUint(8);
+            // console.log('passUint', passUint);
+            // //resultSlice.skip(8);
+            // //console.log('passUint', passUint);
+            // const pass = resultSlice.loadBits( passUint ).toString();
             //const pass = resultSlice.loadBuffer( passUint ).toString();
 
             // const resultSlice = resultCell.beginParse();
-            // const passBits = resultSlice.loadUint(8);
-            // console.log('passBits',passBits)
-            // const passBuffer = resultSlice.loadBuffer( passBits / 8 );
-            // resultSlice.endParse();
-            // console.log('passBuffer', passBuffer);
-            // const pass = passBuffer.toString('utf8');
+            const passBits = resultSlice.loadUint(8);
+            console.log('passBits',passBits)
+            const passBuffer = resultSlice.loadBuffer( passBits / 8 );
+            //resultSlice.endParse();
+            console.log('passBuffer', passBuffer);
+            const pass = passBuffer.toString('utf8');
             console.log('pass', pass);
         } catch( e ){
             console.log('error', e);
