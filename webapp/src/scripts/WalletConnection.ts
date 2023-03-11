@@ -157,7 +157,7 @@ export class WalletConnection implements IConnection {
             endpoint: CONFIG.TESTNET.END_POINT,
         });
 
-        const address = Address.parseFriendly( CONFIG.TESTNET.CONTRACT_ADDRESS );
+        const address = Address.parse( CONFIG.TESTNET.CONTRACT_ADDRESS );
         console.log('address', address);
         
         const stackPayload: TupleItemSlice = {
@@ -166,14 +166,20 @@ export class WalletConnection implements IConnection {
         }
 
         try{
-            const result = await tonClient.runMethod( 
-                    address.address, 
+            const { stack } = await tonClient.runMethod( 
+                    address,
                     CONFIG.TESTNET.GET_METHOD_NAME,
                     [stackPayload]
                 );
+            
+            const nextItemIndex = stack.readBigNumber();
+            const contentRoot = stack.readCell();
+            const owner = stack.readAddress();
+            console.log('nextItemIndex', nextItemIndex.toString());
+            console.log('contentRoot', contentRoot);
+            console.log('owner', owner);
 
-            const resultCell = result.stack.readCell();
-            const resultSlice = resultCell.beginParse();
+            const resultSlice = contentRoot.beginParse();
             console.log('resultSlice', resultSlice);
             const passUint = resultSlice.loadUint(8);
             //resultSlice.skip(8);
