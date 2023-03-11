@@ -1,5 +1,5 @@
 import { Address, beginCell, Builder, Cell, Contract, contractAddress, ContractProvider, Dictionary, Sender, SendMode, Slice, Tuple, TupleItem } from 'ton-core';
-import { TupleItemSlice } from 'ton-core/dist/tuple/tuple';
+import { TupleItemCell, TupleItemSlice } from 'ton-core/dist/tuple/tuple';
 
 export type DictionaryKeyTypes = Address | number | bigint | Buffer;
 export type DictionaryKey<K extends DictionaryKeyTypes> = {
@@ -88,9 +88,12 @@ export class PasswordSaver implements Contract {
 
     async getSalt(provider: ContractProvider, args: string ) {
         
-        const payload: TupleItemSlice = {
-            type: "slice",
+        const buffer = Buffer.from( args );
+
+        const payload: TupleItemCell = {
+            type: "cell",
             cell: beginCell()
+                .storeUint( buffer.byteLength * 8, 8 )
                 .storeBuffer( Buffer.from( args ) )
                 .endCell(),
         };
@@ -101,10 +104,5 @@ export class PasswordSaver implements Contract {
         //return result.stack.readBigNumber();
         return result.stack.readCell();
         //return result.stack.readString();
-    }
-
-    async getID(provider: ContractProvider) {
-        const result = await provider.get('get_id', []);
-        return result.stack.readNumber();
     }
 }
