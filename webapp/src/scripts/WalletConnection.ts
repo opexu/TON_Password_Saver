@@ -263,7 +263,8 @@ function GenerateGetPayload( salt: string ): string {
 async function GenerateSendPayload( salt: string, password: string ): Promise<string> {
 	
     const op = 0x7e8764ef; // increase
-
+    //const query_id = 
+    
     // const saltBuffer = new TextEncoder().encode( salt );
     // const saltByteLength = saltBuffer.byteLength;
     // const passBuffer = new TextEncoder().encode( password );
@@ -288,6 +289,7 @@ async function GenerateSendPayload( salt: string, password: string ): Promise<st
 
     const cell = beginCell()
         .storeUint( op, 32 )
+        //.storeUint( query_id, 64 )
         .storeUint( saltByteLength * 8, 8)
         .storeUint( passByteLength * 8, 8)
         .storeBuffer( saltBuffer )

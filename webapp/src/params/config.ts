@@ -20,7 +20,7 @@ export const CONFIG: IConfig = {
         GET_METHOD_NAME: ""
     },
     TESTNET: {
-        CONTRACT_ADDRESS: "EQCFS0-4ZP5ZhGEv8WuuKQUDkw2BKjYyXZbAn3vnX_0Q2JH7",
+        CONTRACT_ADDRESS: "EQBgqRC8P_6gO4vFkCitsnu06cgbXXrOSB4JBuDRErFchjKG",
         END_POINT: "https://testnet.toncenter.com/api/v2/jsonRPC",
         SEND_COINS: "100000000", // 0.1 TON
         GET_METHOD_NAME: "get_salt"
