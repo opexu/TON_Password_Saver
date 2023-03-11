@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full flex flex-col items-center content-between">
+<div class="w-full h-full flex flex-col items-center justify-between">
     
     <TonConnect
     :Locale="Locale"
