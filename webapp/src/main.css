@@ -4,6 +4,9 @@
 
 @layer base {
 
+    html {
+        @apply h-full;
+    }
     body {
         @apply text-white font-mono text-base overscroll-none select-none;
     }

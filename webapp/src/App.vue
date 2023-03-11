@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full flex flex-col">
+<div class="w-full h-full flex flex-col items-center content-between">
     
     <TonConnect
     :Locale="Locale"
@@ -15,6 +15,10 @@
     v-if="getStatus() === ConnectionStatus.ENABLE"
     ></Main>
 
+    <a class="p-4 hover:text-blue-800"
+    href="https://github.com/opexu/TON_Password_Saver">
+    {{ LANG.MAIN.SOURCE_CODE_LABEL[Locale] }}
+    </a>
 </div>
 </template>
 

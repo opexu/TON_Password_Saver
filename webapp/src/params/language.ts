@@ -37,7 +37,13 @@ const LANG: Language = {
         GET_BTN_LABEL: {
             "ru-RU": "Получить пароль",
             "en-EN": "Get Password",
-        }
+        },
+
+        SOURCE_CODE_LABEL: {
+            "ru-RU": "Исходный код приложения",
+            "en-EN": "Source code",
+        },
+
     },
 
     PASSWORD_SAVER: {
