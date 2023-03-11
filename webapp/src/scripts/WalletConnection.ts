@@ -172,16 +172,13 @@ export class WalletConnection implements IConnection {
                     [stackPayload]
                 );
             
-            const nextItemIndex = stack.readBigNumber();
             const contentRoot = stack.readCell();
-            const owner = stack.readAddress();
-            console.log('nextItemIndex', nextItemIndex.toString());
-            console.log('contentRoot', contentRoot);
-            console.log('owner', owner);
-
             const resultSlice = contentRoot.beginParse();
             console.log('resultSlice', resultSlice);
+            const flag = resultSlice.loadUint(8);
+            console.log('flag', flag);
             const passUint = resultSlice.loadUint(8);
+            console.log('passUint', passUint);
             //resultSlice.skip(8);
             //console.log('passUint', passUint);
             const pass = resultSlice.loadBits( passUint ).toString();
